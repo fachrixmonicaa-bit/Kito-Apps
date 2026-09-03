@@ -1,0 +1,349 @@
+[
+  {
+    "kategori_utama": "F&B, Kuliner & Restoran",
+    "sub_kategori": [
+      {
+        "nama": "Dine-in & Kafe",
+        "jenis_spesifik": [
+          "Restoran Fine Dining / Casual Dining",
+          "Kafe & Coffee Shop",
+          "Kedai Kopi Susu / Kopi Kekinian",
+          "Rumah Makan Padang / Tradisional",
+          "Warung Tenda / Street Food",
+          "Restoran All-You-Can-Eat",
+          "Pizzeria",
+          "Bar & Lounge"
+        ]
+      },
+      {
+        "nama": "Catering & Event F&B",
+        "jenis_spesifik": [
+          "Katering Pernikahan & Acara Kantor",
+          "Katering Harian / Diet Sehat",
+          "Katering Nasi Box / Snack Box",
+          "Jasa Barista & Mocktail Event"
+        ]
+      },
+      {
+        "nama": "Bakery, Snack & Minuman Cepat Saji",
+        "jenis_spesifik": [
+          "Toko Roti & Kue (Bakery)",
+          "Toko Kue Kering & Oleh-oleh",
+          "Outlet Bubble Tea / Minuman Boba",
+          "Outlet Es Krim & Gelato",
+          "Stand Franchise Makanan Ringan (Gorengan, Waffle, Tahu Crispy)",
+          "Coffee Roastery (Sangrai Biji Kopi)"
+        ]
+      },
+      {
+        "nama": "Operasional Khusus F&B",
+        "jenis_spesifik": [
+          "Cloud Kitchen / Dapur Bersama",
+          "Supplier Bahan Baku Makanan (B2B Food Supply)",
+          "Produsen Minuman Kemasan Botol/Kaleng"
+        ]
+      }
+    ]
+  },
+  {
+    "kategori_utama": "Retail, Toko & E-Commerce",
+    "sub_kategori": [
+      {
+        "nama": "Fashion & Aksesoris",
+        "jenis_spesifik": [
+          "Butik Busana Muslim/Gamis",
+          "Toko Pakaian Pria/Wanita",
+          "Toko Sepatu & Sandal",
+          "Toko Tas & Koper",
+          "Toko Jam Tangan",
+          "Toko Perhiasan & Logam Mulia",
+          "Toko Kacamata (Optik)",
+          "Toko Baju Anak & Bayi"
+        ]
+      },
+      {
+        "nama": "Elektronik & Gadget",
+        "jenis_spesifik": [
+          "Toko Smartphone & Tablet",
+          "Toko Komputer, Laptop & Aksesoris PC",
+          "Toko CCTV & Smart Home",
+          "Toko Elektronik Rumah Tangga (AC, Kulkas, TV)",
+          "Jasa Service HP & Laptop"
+        ]
+      },
+      {
+        "nama": "Kebutuhan Harian & Konsumsi",
+        "jenis_spesifik": [
+          "Minimarket Mandiri",
+          "Toko Kelontong Grosir",
+          "Frozen Food Store",
+          "Toko Buah Segar",
+          "Toko Daging & Seafood Segar",
+          "Depo Air Minum Isi Ulang",
+          "Toko Gas LPG & Galon"
+        ]
+      },
+      {
+        "nama": "Kesehatan, Kecantikan & Hobi",
+        "jenis_spesifik": [
+          "Apotek / Toko Obat",
+          "Toko Kosmetik & Skincare",
+          "Toko Parfum / Refill Fragrance",
+          "Pet Shop & Toko Pakan Hewan",
+          "Toko Alat Musik",
+          "Toko Alat Olahraga & Outdoor",
+          "Toko Mainan & Action Figures",
+          "Toko Bunga (Florist)",
+          "Toko Vape / Pods"
+        ]
+      }
+    ]
+  },
+  {
+    "kategori_utama": "Layanan Personal, Gaya Hidup & Kesehatan",
+    "sub_kategori": [
+      {
+        "nama": "Perawatan Diri & Relaksasi",
+        "jenis_spesifik": [
+          "Barbershop",
+          "Salon Kecantikan & Rambut",
+          "Spa & Pijat Refleksi",
+          "Klinik Kecantikan & Estetika",
+          "Studio Nail Art & Eyelash",
+          "Jasa Makeup Artist (MUA)"
+        ]
+      },
+      {
+        "nama": "Kesehatan Klinis & Wellness",
+        "jenis_spesifik": [
+          "Klinik Dokter Umum / Bersama",
+          "Klinik Gigi (Dental Care)",
+          "Klinik Fisioterapi & Akupunktur",
+          "Laboratorium Medis / Cek Darah",
+          "Pusat Kebugaran (Gym & Fitness Center)",
+          "Studio Yoga & Pilates",
+          "Penyewaan Lapangan Olahraga (Futsal, Badminton, Padel, Tenis)"
+        ]
+      },
+      {
+        "nama": "Jasa Rumah Tangga & Hewan",
+        "jenis_spesifik": [
+          "Laundry Kiloan & Satuan (Dry Clean)",
+          "Laundry Sepatu & Tas",
+          "Jasa Bersih Rumah (Home Cleaning Service)",
+          "Jasa Sedot WC & Pipa Mampet",
+          "Jasa Anti Rayap & Pest Control",
+          "Pet Grooming & Penitipan Hewan (Pet Hotel)"
+        ]
+      }
+    ]
+  },
+  {
+    "kategori_utama": "Otomotif, Transportasi & Logistik",
+    "sub_kategori": [
+      {
+        "nama": "Showroom & Dealer",
+        "jenis_spesifik": [
+          "Showroom Mobil Bekas",
+          "Showroom Mobil Baru",
+          "Dealer Motor",
+          "Showroom Sepeda Listrik/EV",
+          "Dealer Truk & Alat Berat",
+          "Showroom Sepeda & Aksesoris"
+        ]
+      },
+      {
+        "nama": "Perawatan & Bengkel",
+        "jenis_spesifik": [
+          "Bengkel Mobil Umum",
+          "Bengkel Resmi / Authorized Service",
+          "Bengkel Motor",
+          "Bengkel Body Repair & Cat",
+          "Salon Mobil / Auto Detailing & Coating",
+          "Cuci Mobil & Motor (Car Wash)",
+          "Toko Ban & Spooring-Balancing",
+          "Toko Variasi & Audio Mobil"
+        ]
+      },
+      {
+        "nama": "Rental & Sewa Kendaraan",
+        "jenis_spesifik": [
+          "Rental Mobil Harian/Bulanan",
+          "Rental Motor Wisata",
+          "Rental Mobil Pengantin/Mewah",
+          "Rental Truk/Pick-up Angkutan Barang",
+          "Sewa Bus Pariwisata"
+        ]
+      },
+      {
+        "nama": "Logistik & Ekspedisi",
+        "jenis_spesifik": [
+          "Jasa Ekspedisi & Cargo Lokal",
+          "Kurir Instan / Delivery Point",
+          "Freight Forwarding & Ekspor-Impor",
+          "Jasa Pindahan (Movers)",
+          "Penyewaan Gudang (3PL/Warehousing)",
+          "Jasa Derek Mobil & Towing"
+        ]
+      }
+    ]
+  },
+  {
+    "kategori_utama": "Jasa Profesional, Kreatif & B2B Service",
+    "sub_kategori": [
+      {
+        "nama": "Legal, Finansial & Bisnis",
+        "jenis_spesifik": [
+          "Kantor Konsultan Hukum / Pengacara",
+          "Kantor Notaris & PPAT",
+          "Konsultan Pajak & Pembukuan/Akuntansi",
+          "Konsultan Manajemen Bisnis",
+          "Perusahaan Outsourcing / Headhunter",
+          "Jasa Pengurusan Izin Usaha & Legalitas"
+        ]
+      },
+      {
+        "nama": "Kreatif, Media & IT",
+        "jenis_spesifik": [
+          "Digital Marketing Agency",
+          "Software House / IT Solution Provider",
+          "Production House (Video & Film)",
+          "Studio Foto Komersial & Prewedding",
+          "Event Organizer (EO) & Wedding Organizer (WO)",
+          "Jasa Penerjemah Tersumpah",
+          "Jasa Percetakan & Digital Printing",
+          "Jasa Pembuatan Neon Box / Reklame / Advertising Luar Ruang"
+        ]
+      },
+      {
+        "nama": "Keamanan & Fasilitas B2B",
+        "jenis_spesifik": [
+          "Jasa Penyedia Security / Satpam",
+          "Jasa Pengelolaan Gedung (Facility Management)",
+          "Penyewaan Genset & Tenda Acara",
+          "Jasa Kalibrasi Alat Industri"
+        ]
+      }
+    ]
+  },
+  {
+    "kategori_utama": "Properti, Bangunan & Hospitality",
+    "sub_kategori": [
+      {
+        "nama": "Agensi & Pengembang",
+        "jenis_spesifik": [
+          "Agen Properti Independen / Broker Kantor",
+          "Developer Perumahan / Cluster",
+          "Pemasar Kavling Tanah",
+          "Kontraktor Sipil & Bangunan",
+          "Jasa Desain Arsitektur & Interior"
+        ]
+      },
+      {
+        "nama": "Akomodasi & Penginapan",
+        "jenis_spesifik": [
+          "Pengelolaan Kost (Indekos Harian/Bulanan)",
+          "Manajemen Kontrakan & Paviliun",
+          "Hotel Butik / Budget Hotel",
+          "Villa & Resort",
+          "Guest House / Homestay",
+          "Glamping & Camping Ground",
+          "Co-living Space"
+        ]
+      },
+      {
+        "nama": "Ruang Usaha & Komersial",
+        "jenis_spesifik": [
+          "Coworking Space",
+          "Penyewaan Ruko / Gedung Perkantoran",
+          "Virtual Office",
+          "Penyewaan Gedung Pernikahan / Function Hall",
+          "Penyewaan Studio Musik & Foto"
+        ]
+      },
+      {
+        "nama": "Material & Perlengkapan Rumah",
+        "jenis_spesifik": [
+          "Toko Bahan Bangunan",
+          "Depo Cat",
+          "Toko Keramik & Sanitari",
+          "Toko Gordyn & Wallpaper",
+          "Toko Furniture & Mebel Kayu",
+          "Jasa Pemasangan Kanopi / Pagar Besi"
+        ]
+      }
+    ]
+  },
+  {
+    "kategori_utama": "Edukasi, Kursus & Komunitas",
+    "sub_kategori": [
+      {
+        "nama": "Pendidikan Non-Formal & Bimbel",
+        "jenis_spesifik": [
+          "Bimbingan Belajar SD/SMP/SMA",
+          "Bimbel Kedinasan & Persiapan Masuk PTN",
+          "Kursus Bahasa Asing (Inggris, Mandarin, Jepang)",
+          "Kursus Mengemudi Mobil",
+          "Sekolah Musik & Vokal",
+          "Akademi Olahraga Anak (Sepak Bola, Renang, Bela Diri)"
+        ]
+      },
+      {
+        "nama": "Pelatihan Kejuruan & Skill Digital",
+        "jenis_spesifik": [
+          "Bootcamp Coding & Data",
+          "Kursus Desain Grafis & Animasi",
+          "Kursus Barista & Memasak (Culinary Course)",
+          "Kursus Menjahit & Pola Busana",
+          "Pelatihan Safety (K3) & Sertifikasi Profesi"
+        ]
+      },
+      {
+        "nama": "Pendidikan Usia Dini & Pengasuhan",
+        "jenis_spesifik": [
+          "Daycare / Penitipan Anak",
+          "Kelompok Bermain (Playgroup) & TK Swasta",
+          "Pusat Terapi Tumbuh Kembang Anak"
+        ]
+      }
+    ]
+  },
+  {
+    "kategori_utama": "Manufaktur, Produksi & Pengolahan Industri",
+    "sub_kategori": [
+      {
+        "nama": "Garmen, Tekstil & Kerajinan",
+        "jenis_spesifik": [
+          "Pabrik Konveksi Kaos & Kemeja",
+          "Penjahit / Tailor Jas & Kebaya",
+          "Pabrik Sepatu & Tas Kulit",
+          "Pengrajin Batik & Tenun",
+          "Pengrajin Souvenir & Merchandise Promosi",
+          "Pabrik Kasur & Busa"
+        ]
+      },
+      {
+        "nama": "Pengolahan Hasil Alam & Agrikultur",
+        "jenis_spesifik": [
+          "Pabrik Pengolahan Kelapa (Kopra, Desiccated Coconut, Sabut)",
+          "Pengolahan Biji Kopi & Kakao",
+          "Penggilingan Padi & Beras",
+          "Perkebunan & Pembibitan Tanaman",
+          "Peternakan Ayam / Sapi / Kambing",
+          "Tambak Ikan & Udang",
+          "Pengolahan Kayu & Sawmill"
+        ]
+      },
+      {
+        "nama": "Fabrikasi, Mesin & Kimia",
+        "jenis_spesifik": [
+          "Bengkel Bubut & Fabrikasi Logam",
+          "Pabrik Kardus & Packaging Box",
+          "Pabrik Plastik & Injection Molding",
+          "Produsen Sabun & Produk Pembersih Kimia Rumah Tangga",
+          "Pabrik Pakan Ternak"
+        ]
+      }
+    ]
+  }
+]

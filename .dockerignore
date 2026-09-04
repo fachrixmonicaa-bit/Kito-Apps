@@ -1,0 +1,6 @@
+node_modules
+.git
+.agents
+kito-landing/node_modules
+kito-landing/dist
+kito-landing/server

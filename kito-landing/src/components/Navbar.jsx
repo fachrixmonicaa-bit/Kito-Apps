@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { UserCircle2 } from 'lucide-react';
+import { UserCircle2, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   
   // If not on landing page or sell page, always show the solid navbar
@@ -55,8 +56,29 @@ const Navbar = () => {
                 Kito News
               </Link>
             </div>
+
+            {/* Tombol Hamburger HP */}
+            <button 
+              className={`lg:hidden p-1 transition-colors ${textClasses}`}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
           </div>
         </div>
+      </div>
+
+      {/* Dropdown Menu HP */}
+      <div 
+        className={`lg:hidden absolute top-20 left-0 w-full bg-white shadow-xl flex flex-col border-t border-slate-100 overflow-hidden transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'max-h-96 opacity-100 py-2 px-6' : 'max-h-0 opacity-0 py-0 px-6'
+        }`}
+      >
+        <Link to="/" className="text-slate-800 hover:text-primary font-medium py-3 border-b border-slate-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+        <Link to="/properties" className="text-slate-800 hover:text-primary font-medium py-3 border-b border-slate-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Cari Properti</Link>
+        <Link to="/sell" className="text-slate-800 hover:text-primary font-medium py-3 border-b border-slate-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Jual Properti</Link>
+        <Link to="/join" className="text-slate-800 hover:text-primary font-medium py-3 border-b border-slate-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Join Us</Link>
+        <Link to="/news" className="text-slate-800 hover:text-primary font-medium py-3 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Kito News</Link>
       </div>
     </nav>
   );

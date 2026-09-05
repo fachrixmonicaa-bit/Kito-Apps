@@ -65,35 +65,61 @@ export const PropertyProvider = ({ children }) => {
   });
 
   // State for all KitoApps databases
-  const [properties, setProperties] = useState(() => {
-    const saved = localStorage.getItem('kito_properties');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [properties, setProperties] = useState([]);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await fetch('/api/properties');
+        if (response.ok) {
+          const data = await response.json();
+          // Map backend `id` to `propertyId` for frontend compatibility
+          const mapped = data.map(p => ({...p, propertyId: p.id}));
+          setProperties(mapped);
+        }
+      } catch (error) {
+        console.error('Failed to fetch properties:', error);
+      }
+    };
+    fetchProperties();
+  }, []);
   
   const [listings, setListings] = useState(() => {
     const saved = localStorage.getItem('kito_listings');
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [leads, setLeads] = useState(() => {
-    const saved = localStorage.getItem('kito_leads');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [leads, setLeads] = useState([]);
 
-  const [surveys, setSurveys] = useState(() => {
-    const saved = localStorage.getItem('kito_surveys');
-    return saved ? JSON.parse(saved) : [];
-  });
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const response = await fetch('/api/leads');
+        if (response.ok) {
+          const data = await response.json();
+          setLeads(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch leads:', error);
+      }
+    };
+    fetchLeads();
+  }, []);
 
-  const [offers, setOffers] = useState(() => {
-    const saved = localStorage.getItem('kito_offers');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [surveys, setSurveys] = useState([]);
+  useEffect(() => {
+    fetch('/api/surveys').then(r => r.ok && r.json().then(setSurveys)).catch(console.error);
+  }, []);
 
-  const [expenses, setExpenses] = useState(() => {
-    const saved = localStorage.getItem('kito_expenses');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [offers, setOffers] = useState([]);
+  useEffect(() => {
+    fetch('/api/offers').then(r => r.ok && r.json().then(setOffers)).catch(console.error);
+  }, []);
+
+  const [expenses, setExpenses] = useState([]);
+  useEffect(() => {
+    fetch('/api/expenses').then(r => r.ok && r.json().then(setExpenses)).catch(console.error);
+  }, []);
 
   const [goals, setGoals] = useState(() => {
     const saved = localStorage.getItem('kito_goals');
@@ -107,33 +133,10 @@ export const PropertyProvider = ({ children }) => {
     };
   });
 
-  const [articles, setArticles] = useState(() => {
-    const saved = localStorage.getItem('kito_articles');
-    return saved ? JSON.parse(saved) : [
-      {
-        articleId: 'NEWS-1001',
-        title: 'Suku Bunga KPR Turun, Ini Momen Emas Beli Properti di Padang',
-        excerpt: 'Bank Indonesia (BI) kembali menahan suku bunga acuan, namun beberapa bank BUMN mulai memberikan promo KPR menarik. Apakah ini saat yang tepat?',
-        content: 'Bank Indonesia (BI) kembali menahan suku bunga acuan, namun beberapa bank BUMN mulai memberikan promo KPR menarik. Apakah ini saat yang tepat untuk berinvestasi properti di Padang? Mengingat potensi pertumbuhan wilayah, sekarang adalah momen yang tepat.',
-        category: 'Market',
-        status: 'Published',
-        tanggalInput: new Date('2026-08-24T10:00:00Z').toISOString(),
-        author: 'Admin Kito',
-        image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=1200'
-      },
-      {
-        articleId: 'NEWS-1002',
-        title: 'Prospek Investasi Properti Komersial di Padang Semakin Menjanjikan',
-        excerpt: 'Infrastruktur yang berkembang pesat menjadikan area komersial incaran utama para investor tahun ini.',
-        content: 'Infrastruktur yang berkembang pesat menjadikan area komersial incaran utama. Dengan proyek jalan tol baru dan pengembangan pelabuhan, nilai komersial diprediksi naik pesat dalam 5 tahun ke depan.',
-        category: 'Investasi',
-        status: 'Published',
-        tanggalInput: new Date('2026-08-24T14:30:00Z').toISOString(),
-        author: 'Admin Kito',
-        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=800'
-      }
-    ];
-  });
+  const [articles, setArticles] = useState([]);
+  useEffect(() => {
+    fetch('/api/articles').then(r => r.ok && r.json().then(setArticles)).catch(console.error);
+  }, []);
 
   const [correctionFactors, setCorrectionFactors] = useState(() => {
     const saved = localStorage.getItem('kito_correction_factors');
@@ -196,37 +199,18 @@ export const PropertyProvider = ({ children }) => {
     localStorage.setItem('kito_valuation_settings', JSON.stringify(valuationSettings));
   }, [valuationSettings]);
 
-  useEffect(() => {
-    localStorage.setItem('kito_properties', JSON.stringify(properties));
-  }, [properties]);
+  // localStorage logic for properties removed (now using backend)
 
   useEffect(() => {
     localStorage.setItem('kito_listings', JSON.stringify(listings));
   }, [listings]);
 
-  useEffect(() => {
-    localStorage.setItem('kito_leads', JSON.stringify(leads));
-  }, [leads]);
+  // localStorage logic for leads removed (now using backend)
 
-  useEffect(() => {
-    localStorage.setItem('kito_surveys', JSON.stringify(surveys));
-  }, [surveys]);
-
-  useEffect(() => {
-    localStorage.setItem('kito_offers', JSON.stringify(offers));
-  }, [offers]);
-
-  useEffect(() => {
-    localStorage.setItem('kito_expenses', JSON.stringify(expenses));
-  }, [expenses]);
-
+  // localStorage logic for surveys, offers, expenses, articles removed
   useEffect(() => {
     localStorage.setItem('kito_goals', JSON.stringify(goals));
   }, [goals]);
-
-  useEffect(() => {
-    localStorage.setItem('kito_articles', JSON.stringify(articles));
-  }, [articles]);
 
   // Generators for IDs
   const generateId = (prefix) => {
@@ -243,51 +227,103 @@ export const PropertyProvider = ({ children }) => {
   };
 
   // --- ARTICLES (KitoNews) ---
-  const addArticle = (data) => {
-    const newArticle = {
-      articleId: generateId('NEWS'),
-      tanggalInput: new Date().toISOString(),
-      ...data
-    };
-    setArticles(prev => [newArticle, ...prev]);
-    return newArticle.articleId;
+  const addArticle = async (data) => {
+    try {
+      const response = await fetch('/api/articles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        const newArticle = await response.json();
+        setArticles(prev => [newArticle, ...prev]);
+        return newArticle.id;
+      }
+    } catch (e) { console.error('Error adding article', e); }
   };
 
-  const updateArticle = (id, data) => {
-    setArticles(prev => prev.map(a => a.articleId === id ? { ...a, ...data } : a));
+  const updateArticle = async (id, data) => {
+    try {
+      const response = await fetch(`/api/articles/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        setArticles(prev => prev.map(a => (a.articleId === id || a.id === id) ? updated : a));
+      }
+    } catch (e) { console.error('Error updating article', e); }
   };
 
-  const deleteArticle = (id) => {
-    setArticles(prev => prev.filter(a => a.articleId !== id));
+  const deleteArticle = async (id) => {
+    try {
+      const response = await fetch(`/api/articles/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        setArticles(prev => prev.filter(a => a.articleId !== id && a.id !== id));
+      }
+    } catch (e) { console.error('Error deleting article', e); }
   };
 
   // --- PROPERTIES ---
-  const addProperty = (data) => {
-    const newProperty = {
-      propertyId: generateId('PROP'),
-      tanggalInput: new Date().toISOString(),
-      ...data
-    };
-    setProperties(prev => [newProperty, ...prev]);
-    return newProperty.propertyId;
+  const addProperty = async (data) => {
+    try {
+      const payload = {
+        title: data.title || 'Tanpa Judul',
+        description: data.description || '',
+        price: Number(data.price) || 0,
+        location: data.location || '',
+        status: data.status || 'available'
+      };
+      const response = await fetch('/api/properties', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (response.ok) {
+        const newProperty = await response.json();
+        const mapped = { ...newProperty, propertyId: newProperty.id };
+        setProperties(prev => [mapped, ...prev]);
+        return mapped.propertyId;
+      }
+    } catch (error) {
+      console.error('Error adding property:', error);
+    }
   };
 
-  const addBulkProperties = (dataArray) => {
-    const newProperties = dataArray.map(data => ({
-      propertyId: generateId('PROP'),
-      tanggalInput: new Date().toISOString(),
-      ...data
-    }));
-    setProperties(prev => [...newProperties, ...prev]);
-    return newProperties.length;
+  const addBulkProperties = async (dataArray) => {
+    console.warn("Bulk insert properties not yet implemented with backend");
+    return 0;
   };
 
-  const updateProperty = (id, data) => {
-    setProperties(prev => prev.map(p => p.propertyId === id ? { ...p, ...data } : p));
+  const updateProperty = async (id, data) => {
+    try {
+      const response = await fetch(`/api/properties/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        const mapped = { ...updated, propertyId: updated.id };
+        setProperties(prev => prev.map(p => p.propertyId === id ? mapped : p));
+      }
+    } catch (error) {
+      console.error('Error updating property:', error);
+    }
   };
 
-  const deleteProperty = (id) => {
-    setProperties(prev => prev.filter(p => p.propertyId !== id));
+  const deleteProperty = async (id) => {
+    try {
+      const response = await fetch(`/api/properties/${id}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        setProperties(prev => prev.filter(p => p.propertyId !== id));
+      }
+    } catch (error) {
+      console.error('Error deleting property:', error);
+    }
   };
 
   // --- LISTINGS ---
@@ -310,86 +346,176 @@ export const PropertyProvider = ({ children }) => {
   };
 
   // --- LEADS ---
-  const addLead = (data) => {
-    const newLead = {
-      id: generateId('LD'),
-      date: new Date().toISOString(),
-      status: 'New',
-      createdBy: user?.name || 'Unknown',
-      ...data
-    };
-    setLeads(prev => [newLead, ...prev]);
-    return newLead.id;
+  const addLead = async (data) => {
+    try {
+      const payload = {
+        name: data.name || 'Unknown',
+        phone: data.phone || '',
+        email: data.email || '',
+        message: data.message || '',
+        propertyId: data.propertyId || '',
+        status: data.status || 'New',
+        createdBy: user?.name || 'Unknown'
+      };
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (response.ok) {
+        const newLead = await response.json();
+        setLeads(prev => [newLead, ...prev]);
+        return newLead.id;
+      }
+    } catch (error) {
+      console.error('Error adding lead:', error);
+    }
   };
 
-  const updateLead = (id, data) => {
-    setLeads(prev => prev.map(l => l.id === id ? { ...l, ...data } : l));
+  const updateLead = async (id, data) => {
+    try {
+      const response = await fetch(`/api/leads/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        setLeads(prev => prev.map(l => l.id === id ? updated : l));
+      }
+    } catch (error) {
+      console.error('Error updating lead:', error);
+    }
   };
 
-  const deleteLead = (id) => {
-    setLeads(prev => prev.filter(l => l.id !== id));
+  const deleteLead = async (id) => {
+    try {
+      const response = await fetch(`/api/leads/${id}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        setLeads(prev => prev.filter(l => l.id !== id));
+      }
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+    }
   };
 
   // --- SURVEYS ---
-  const addSurvey = (data) => {
-    const newSurvey = {
-      id: generateId('SRV'),
-      date: new Date().toISOString(),
-      status: 'Scheduled',
-      ...data
-    };
-    setSurveys(prev => [newSurvey, ...prev]);
-    return newSurvey.id;
+  const addSurvey = async (data) => {
+    try {
+      const response = await fetch('/api/surveys', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data })
+      });
+      if (response.ok) {
+        const newSurvey = await response.json();
+        setSurveys(prev => [newSurvey, ...prev]);
+        return newSurvey.id;
+      }
+    } catch (e) { console.error('Error adding survey', e); }
   };
 
-  const updateSurvey = (id, data) => {
-    setSurveys(prev => prev.map(s => s.id === id ? { ...s, ...data } : s));
+  const updateSurvey = async (id, data) => {
+    try {
+      const response = await fetch(`/api/surveys/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data })
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        setSurveys(prev => prev.map(s => s.id === id ? updated : s));
+      }
+    } catch (e) { console.error('Error updating survey', e); }
   };
 
-  const deleteSurvey = (id) => {
-    setSurveys(prev => prev.filter(s => s.id !== id));
+  const deleteSurvey = async (id) => {
+    try {
+      const response = await fetch(`/api/surveys/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        setSurveys(prev => prev.filter(s => s.id !== id));
+      }
+    } catch (e) { console.error('Error deleting survey', e); }
   };
 
   // --- OFFERS ---
-  const addOffer = (data) => {
-    const newOffer = {
-      id: generateId('OFR'),
-      date: new Date().toISOString(),
-      status: 'Draft',
-      financeStatus: 'Pending',
-      createdBy: user?.name || 'Unknown',
-      ...data
-    };
-    setOffers(prev => [newOffer, ...prev]);
-    return newOffer.id;
+  const addOffer = async (data) => {
+    try {
+      const response = await fetch('/api/offers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ createdBy: user?.name || 'Unknown', data })
+      });
+      if (response.ok) {
+        const newOffer = await response.json();
+        setOffers(prev => [newOffer, ...prev]);
+        return newOffer.id;
+      }
+    } catch (e) { console.error('Error adding offer', e); }
   };
 
-  const updateOffer = (id, data) => {
-    setOffers(prev => prev.map(o => o.id === id ? { ...o, ...data } : o));
+  const updateOffer = async (id, data) => {
+    try {
+      const response = await fetch(`/api/offers/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data })
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        setOffers(prev => prev.map(o => o.id === id ? updated : o));
+      }
+    } catch (e) { console.error('Error updating offer', e); }
   };
 
-  const deleteOffer = (id) => {
-    setOffers(prev => prev.filter(o => o.id !== id));
+  const deleteOffer = async (id) => {
+    try {
+      const response = await fetch(`/api/offers/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        setOffers(prev => prev.filter(o => o.id !== id));
+      }
+    } catch (e) { console.error('Error deleting offer', e); }
   };
 
   // --- EXPENSES ---
-  const addExpense = (data) => {
-    const newExpense = {
-      id: generateId('EXP'),
-      date: new Date().toISOString(),
-      createdBy: user?.name || 'Unknown',
-      ...data
-    };
-    setExpenses(prev => [newExpense, ...prev]);
-    return newExpense.id;
+  const addExpense = async (data) => {
+    try {
+      const response = await fetch('/api/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ createdBy: user?.name || 'Unknown', data })
+      });
+      if (response.ok) {
+        const newExpense = await response.json();
+        setExpenses(prev => [newExpense, ...prev]);
+        return newExpense.id;
+      }
+    } catch (e) { console.error('Error adding expense', e); }
   };
 
-  const updateExpense = (id, data) => {
-    setExpenses(prev => prev.map(e => e.id === id ? { ...e, ...data } : e));
+  const updateExpense = async (id, data) => {
+    try {
+      const response = await fetch(`/api/expenses/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data })
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        setExpenses(prev => prev.map(e => e.id === id ? updated : e));
+      }
+    } catch (e) { console.error('Error updating expense', e); }
   };
 
-  const deleteExpense = (id) => {
-    setExpenses(prev => prev.filter(e => e.id !== id));
+  const deleteExpense = async (id) => {
+    try {
+      const response = await fetch(`/api/expenses/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        setExpenses(prev => prev.filter(e => e.id !== id));
+      }
+    } catch (e) { console.error('Error deleting expense', e); }
   };
 
   return (

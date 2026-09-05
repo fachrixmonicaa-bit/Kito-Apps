@@ -52,7 +52,7 @@ const NewsPage = () => {
                   Sorotan Utama
                 </h2>
                 
-                <Link to={`/news/${featuredNews.articleId}`} className="block group cursor-pointer bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100">
+                <Link to={`/news/${featuredNews.articleId || featuredNews.id}`} className="block group cursor-pointer bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100">
                   <div className="h-[300px] md:h-[400px] overflow-hidden relative">
                     {featuredNews.image ? (
                       <img src={featuredNews.image} alt={featuredNews.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -99,7 +99,7 @@ const NewsPage = () => {
             {/* Article Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredNews.map(news => (
-                <Link to={`/news/${news.articleId}`} key={news.articleId} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex flex-col h-full">
+                <Link to={`/news/${news.articleId || news.id}`} key={news.articleId || news.id} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex flex-col h-full">
                   <div className="h-48 overflow-hidden relative">
                     {news.image ? (
                       <img src={news.image} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />

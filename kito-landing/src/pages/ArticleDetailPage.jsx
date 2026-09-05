@@ -9,7 +9,7 @@ const ArticleDetailPage = () => {
   const { id } = useParams();
   const { articles } = useProperty();
 
-  const article = articles?.find(a => a.articleId === id);
+  const article = articles?.find(a => String(a.articleId) === id || String(a.id) === id);
 
   if (!article) {
     return (

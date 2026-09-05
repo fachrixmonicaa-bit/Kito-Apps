@@ -56,7 +56,7 @@ export const predictBuildingPrice = (jenis, kondisi, tingkat, settings) => {
 };
 
 export const PropertyProvider = ({ children }) => {
-  const API_BASE_URL = 'http://36xrucne7oxvtp86dwrgbikb.202.10.38.80.sslip.io';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const { user } = useAuth();
 

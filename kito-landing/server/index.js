@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { db } from './src/db/index.js';
-import { property, lead, article, survey, offer, expense } from './src/db/schema.js';
+import { property, lead, article, survey, offer, expense, listing } from './src/db/schema.js';
 import { eq } from 'drizzle-orm';
 
 dotenv.config();
@@ -232,6 +232,34 @@ app.delete('/api/expenses/:id', async (req, res) => {
     await db.delete(expense).where(eq(expense.id, Number(id)));
     res.json({ success: true });
   } catch (error) { res.status(500).json({ error: "Internal server error" }); }
+});
+
+// ====== LISTINGS ======
+app.get('/api/listings', async (req, res) => {
+  try {
+    const data = await db.select().from(listing);
+    res.json(data);
+  } catch (error) { res.status(500).json({ error: 'Internal server error' }); }
+});
+app.post('/api/listings', async (req, res) => {
+  try {
+    const result = await db.insert(listing).values({ data: req.body }).returning();
+    res.json(result[0]);
+  } catch (error) { res.status(500).json({ error: 'Internal server error' }); }
+});
+app.put('/api/listings/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await db.update(listing).set({ data: req.body }).where(eq(listing.id, Number(id))).returning();
+    res.json(result[0]);
+  } catch (error) { res.status(500).json({ error: 'Internal server error' }); }
+});
+app.delete('/api/listings/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await db.delete(listing).where(eq(listing.id, Number(id)));
+    res.json({ success: true });
+  } catch (error) { res.status(500).json({ error: 'Internal server error' }); }
 });
 
 app.listen(PORT, () => {

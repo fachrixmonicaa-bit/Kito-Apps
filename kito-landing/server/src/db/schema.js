@@ -66,3 +66,9 @@ export const expense = pgTable('Expense', {
   date: timestamp('date').defaultNow().notNull(),
   data: jsonb('data')
 });
+
+export const listing = pgTable('Listing', {
+  id: serial('id').primaryKey(),
+  tanggalInput: timestamp('tanggalInput').defaultNow().notNull(),
+  data: jsonb('data')
+});

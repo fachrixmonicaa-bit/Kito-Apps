@@ -86,10 +86,14 @@ export const PropertyProvider = ({ children }) => {
     fetchProperties();
   }, []);
   
-  const [listings, setListings] = useState(() => {
-    const saved = localStorage.getItem('kito_listings');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [listings, setListings] = useState([]);
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/listings`)
+      .then(r => r.ok && r.json().then(data => {
+        const mapped = data.map(l => ({ ...l.data, listingId: l.id, id: l.id, tanggalInput: l.tanggalInput }));
+        setListings(mapped);
+      })).catch(console.error);
+  }, []);
 
   const [leads, setLeads] = useState([]);
 
@@ -203,9 +207,7 @@ export const PropertyProvider = ({ children }) => {
 
   // localStorage logic for properties removed (now using backend)
 
-  useEffect(() => {
-    localStorage.setItem('kito_listings', JSON.stringify(listings));
-  }, [listings]);
+  // localStorage for listings removed (now using backend)
 
   // localStorage logic for leads removed (now using backend)
 
@@ -329,22 +331,44 @@ export const PropertyProvider = ({ children }) => {
   };
 
   // --- LISTINGS ---
-  const addListing = (data) => {
-    const newListing = {
-      listingId: generateId('LST'),
-      tanggalInput: new Date().toISOString(),
-      ...data
-    };
-    setListings(prev => [newListing, ...prev]);
-    return newListing.listingId;
+  const addListing = async (data) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/listings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        const result = await response.json();
+        const mapped = { ...result.data, listingId: result.id, id: result.id, tanggalInput: result.tanggalInput };
+        setListings(prev => [mapped, ...prev]);
+        return mapped.listingId;
+      }
+    } catch (e) { console.error('Error adding listing', e); }
   };
 
-  const updateListing = (id, data) => {
-    setListings(prev => prev.map(l => l.listingId === id ? { ...l, ...data } : l));
+  const updateListing = async (id, data) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/listings/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        const result = await response.json();
+        const mapped = { ...result.data, listingId: result.id, id: result.id, tanggalInput: result.tanggalInput };
+        setListings(prev => prev.map(l => l.listingId === id ? mapped : l));
+      }
+    } catch (e) { console.error('Error updating listing', e); }
   };
 
-  const deleteListing = (id) => {
-    setListings(prev => prev.filter(l => l.listingId !== id));
+  const deleteListing = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/listings/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        setListings(prev => prev.filter(l => l.listingId !== id && l.id !== id));
+      }
+    } catch (e) { console.error('Error deleting listing', e); }
   };
 
   // --- LEADS ---

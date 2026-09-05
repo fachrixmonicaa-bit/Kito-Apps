@@ -72,7 +72,7 @@ export const PropertyProvider = ({ children }) => {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/properties');
+        const response = await fetch(`${API_BASE_URL}/api/properties`);
         if (response.ok) {
           const data = await response.json();
           // Map backend `id` to `propertyId` for frontend compatibility
@@ -80,7 +80,7 @@ export const PropertyProvider = ({ children }) => {
           setProperties(mapped);
         }
       } catch (error) {
-        console.error('Failed to fetch properties:', error);
+        console.error(`Failed to fetch properties:`, error);
       }
     };
     fetchProperties();
@@ -96,13 +96,13 @@ export const PropertyProvider = ({ children }) => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/leads');
+        const response = await fetch(`${API_BASE_URL}/api/leads`);
         if (response.ok) {
           const data = await response.json();
           setLeads(data);
         }
       } catch (error) {
-        console.error('Failed to fetch leads:', error);
+        console.error(`Failed to fetch leads:`, error);
       }
     };
     fetchLeads();
@@ -110,21 +110,21 @@ export const PropertyProvider = ({ children }) => {
 
   const [surveys, setSurveys] = useState([]);
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/surveys').then(r => r.ok && r.json().then(setSurveys)).catch(console.error);
+    fetch(`${API_BASE_URL}/api/surveys`).then(r => r.ok && r.json().then(setSurveys)).catch(console.error);
   }, []);
 
   const [offers, setOffers] = useState([]);
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/offers').then(r => r.ok && r.json().then(setOffers)).catch(console.error);
+    fetch(`${API_BASE_URL}/api/offers`).then(r => r.ok && r.json().then(setOffers)).catch(console.error);
   }, []);
 
   const [expenses, setExpenses] = useState([]);
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/expenses').then(r => r.ok && r.json().then(setExpenses)).catch(console.error);
+    fetch(`${API_BASE_URL}/api/expenses`).then(r => r.ok && r.json().then(setExpenses)).catch(console.error);
   }, []);
 
   const [goals, setGoals] = useState(() => {
-    const saved = localStorage.getItem('kito_goals');
+    const saved = localStorage.getItem(`kito_goals`);
     return saved ? JSON.parse(saved) : { 
       companyTargetValue: 10000000000, 
       companyTargetListing: 50,
@@ -137,11 +137,11 @@ export const PropertyProvider = ({ children }) => {
 
   const [articles, setArticles] = useState([]);
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/articles').then(r => r.ok && r.json().then(setArticles)).catch(console.error);
+    fetch(`${API_BASE_URL}/api/articles`).then(r => r.ok && r.json().then(setArticles)).catch(console.error);
   }, []);
 
   const [correctionFactors, setCorrectionFactors] = useState(() => {
-    const saved = localStorage.getItem('kito_correction_factors');
+    const saved = localStorage.getItem(`kito_correction_factors`);
     return saved ? JSON.parse(saved) : {
       akses: 10.0,
       posisi: 5.0,
@@ -158,7 +158,7 @@ export const PropertyProvider = ({ children }) => {
   };
 
   const [valuationSettings, setValuationSettings] = useState(() => {
-    const saved = localStorage.getItem('kito_valuation_settings');
+    const saved = localStorage.getItem(`kito_valuation_settings`);
     return saved ? JSON.parse(saved) : {
       basePrices: {
         'Rumah': 3500000,
@@ -231,8 +231,8 @@ export const PropertyProvider = ({ children }) => {
   // --- ARTICLES (KitoNews) ---
   const addArticle = async (data) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/articles', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/api/articles`, {
+        method: `POST`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
@@ -247,7 +247,7 @@ export const PropertyProvider = ({ children }) => {
   const updateArticle = async (id, data) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/articles/${id}`, {
-        method: 'PUT',
+        method: `PUT`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
@@ -260,7 +260,7 @@ export const PropertyProvider = ({ children }) => {
 
   const deleteArticle = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/articles/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${API_BASE_URL}/api/articles/${id}`, { method: `DELETE` });
       if (response.ok) {
         setArticles(prev => prev.filter(a => a.articleId !== id && a.id !== id));
       }
@@ -277,8 +277,8 @@ export const PropertyProvider = ({ children }) => {
         location: data.location || '',
         status: data.status || 'available'
       };
-      const response = await fetch(`${API_BASE_URL}/api/properties', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/api/properties`, {
+        method: `POST`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
@@ -301,7 +301,7 @@ export const PropertyProvider = ({ children }) => {
   const updateProperty = async (id, data) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/properties/${id}`, {
-        method: 'PUT',
+        method: `PUT`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
@@ -318,7 +318,7 @@ export const PropertyProvider = ({ children }) => {
   const deleteProperty = async (id) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/properties/${id}`, {
-        method: 'DELETE'
+        method: `DELETE`
       });
       if (response.ok) {
         setProperties(prev => prev.filter(p => p.propertyId !== id));
@@ -359,8 +359,8 @@ export const PropertyProvider = ({ children }) => {
         status: data.status || 'New',
         createdBy: user?.name || 'Unknown'
       };
-      const response = await fetch(`${API_BASE_URL}/api/leads', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/api/leads`, {
+        method: `POST`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
@@ -377,7 +377,7 @@ export const PropertyProvider = ({ children }) => {
   const updateLead = async (id, data) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads/${id}`, {
-        method: 'PUT',
+        method: `PUT`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
@@ -393,7 +393,7 @@ export const PropertyProvider = ({ children }) => {
   const deleteLead = async (id) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads/${id}`, {
-        method: 'DELETE'
+        method: `DELETE`
       });
       if (response.ok) {
         setLeads(prev => prev.filter(l => l.id !== id));
@@ -406,8 +406,8 @@ export const PropertyProvider = ({ children }) => {
   // --- SURVEYS ---
   const addSurvey = async (data) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/surveys', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/api/surveys`, {
+        method: `POST`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data })
       });
@@ -422,7 +422,7 @@ export const PropertyProvider = ({ children }) => {
   const updateSurvey = async (id, data) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/surveys/${id}`, {
-        method: 'PUT',
+        method: `PUT`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data })
       });
@@ -435,7 +435,7 @@ export const PropertyProvider = ({ children }) => {
 
   const deleteSurvey = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/surveys/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${API_BASE_URL}/api/surveys/${id}`, { method: `DELETE` });
       if (response.ok) {
         setSurveys(prev => prev.filter(s => s.id !== id));
       }
@@ -445,8 +445,8 @@ export const PropertyProvider = ({ children }) => {
   // --- OFFERS ---
   const addOffer = async (data) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/offers', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/api/offers`, {
+        method: `POST`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ createdBy: user?.name || 'Unknown', data })
       });
@@ -461,7 +461,7 @@ export const PropertyProvider = ({ children }) => {
   const updateOffer = async (id, data) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/offers/${id}`, {
-        method: 'PUT',
+        method: `PUT`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data })
       });
@@ -474,7 +474,7 @@ export const PropertyProvider = ({ children }) => {
 
   const deleteOffer = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/offers/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${API_BASE_URL}/api/offers/${id}`, { method: `DELETE` });
       if (response.ok) {
         setOffers(prev => prev.filter(o => o.id !== id));
       }
@@ -484,8 +484,8 @@ export const PropertyProvider = ({ children }) => {
   // --- EXPENSES ---
   const addExpense = async (data) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/expenses', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/api/expenses`, {
+        method: `POST`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ createdBy: user?.name || 'Unknown', data })
       });
@@ -500,7 +500,7 @@ export const PropertyProvider = ({ children }) => {
   const updateExpense = async (id, data) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/expenses/${id}`, {
-        method: 'PUT',
+        method: `PUT`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data })
       });
@@ -513,7 +513,7 @@ export const PropertyProvider = ({ children }) => {
 
   const deleteExpense = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/expenses/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${API_BASE_URL}/api/expenses/${id}`, { method: `DELETE` });
       if (response.ok) {
         setExpenses(prev => prev.filter(e => e.id !== id));
       }

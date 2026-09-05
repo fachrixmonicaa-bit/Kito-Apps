@@ -40,7 +40,7 @@ export const article = pgTable('Article', {
   category: varchar('category', { length: 191 }),
   status: varchar('status', { length: 50 }).default('Draft'),
   author: varchar('author', { length: 191 }),
-  image: varchar('image', { length: 255 }),
+  image: text('image'),
   tanggalInput: timestamp('tanggalInput').defaultNow().notNull(),
 });
 

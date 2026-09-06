@@ -17,7 +17,7 @@ const NewsManagement = () => {
 
   const handleToggleStatus = (article) => {
     const newStatus = article.status === 'Published' ? 'Draft' : 'Published';
-    updateArticle(article.articleId, { status: newStatus });
+    updateArticle(article.articleId || article.id, { status: newStatus });
   };
 
   const filteredArticles = articles?.filter(a => {

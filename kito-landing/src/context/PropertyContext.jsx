@@ -359,7 +359,7 @@ export const PropertyProvider = ({ children }) => {
         let extra = {};
         try { extra = JSON.parse(updated.description || '{}'); } catch(e) {}
         const mapped = { ...extra, ...updated, propertyId: updated.id };
-        setProperties(prev => prev.map(p => p.propertyId === id ? mapped : p));
+        setProperties(prev => prev.map(p => String(p.propertyId) === String(id) ? mapped : p));
       }
     } catch (error) {
       console.error('Error updating property:', error);
@@ -372,7 +372,7 @@ export const PropertyProvider = ({ children }) => {
         method: `DELETE`
       });
       if (response.ok) {
-        setProperties(prev => prev.filter(p => p.propertyId !== id));
+        setProperties(prev => prev.filter(p => String(p.propertyId) !== String(id)));
       }
     } catch (error) {
       console.error('Error deleting property:', error);

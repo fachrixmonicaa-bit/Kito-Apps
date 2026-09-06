@@ -107,7 +107,7 @@ const PropertyManagement = () => {
 
   const filteredProperties = properties.filter(p => 
     (p.alamat || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (p.propertyId || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(p.propertyId || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (p.kecamatan || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 

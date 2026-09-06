@@ -44,7 +44,8 @@ const PropertyForm = () => {
 
   useEffect(() => {
     if (isEdit) {
-      const propToEdit = properties.find(p => p.propertyId === id);
+      // Use == (loose) or String() because DB returns number but URL param is string
+      const propToEdit = properties.find(p => String(p.propertyId) === String(id));
       if (propToEdit) {
         let parsedWaktu = propToEdit.waktu || '';
         if (parsedWaktu && parsedWaktu.includes('T')) {

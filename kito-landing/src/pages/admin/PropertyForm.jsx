@@ -114,12 +114,12 @@ const PropertyForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isEdit) {
-      updateProperty(id, formData);
+      await updateProperty(id, formData);
     } else {
-      addProperty(formData);
+      await addProperty(formData);
     }
     navigate('/admin/properties');
   };

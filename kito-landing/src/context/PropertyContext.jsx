@@ -76,8 +76,12 @@ export const PropertyProvider = ({ children }) => {
         const response = await fetch(`${API_BASE_URL}/api/properties`);
         if (response.ok) {
           const data = await response.json();
-          // Map backend `id` to `propertyId` for frontend compatibility
-          const mapped = data.map(p => ({...p, propertyId: p.id}));
+          // Map backend id to propertyId, and restore full form data from description JSON
+          const mapped = data.map(p => {
+            let extra = {};
+            try { extra = JSON.parse(p.description || '{}'); } catch(e) {}
+            return { ...extra, ...p, propertyId: p.id };
+          });
           setProperties(mapped);
         }
       } catch (error) {
@@ -273,21 +277,25 @@ export const PropertyProvider = ({ children }) => {
   // --- PROPERTIES ---
   const addProperty = async (data) => {
     try {
+      // Store all rich form data in description as JSON, with key fields at top level for DB columns
+      const hargaNum = Number(String(data.hargaJual || data.price || '0').replace(/\D/g, '')) || 0;
       const payload = {
-        title: data.title || 'Tanpa Judul',
-        description: data.description || '',
-        price: Number(data.price) || 0,
-        location: data.location || '',
-        status: data.status || 'available'
+        title: data.alamat || data.title || 'Tanpa Judul',
+        description: JSON.stringify(data),
+        price: hargaNum,
+        location: [data.kecamatan, data.kelurahan].filter(Boolean).join(', ') || data.location || '',
+        status: data.status || 'Listing'
       };
       const response = await fetch(`${API_BASE_URL}/api/properties`, {
-        method: `POST`,
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       if (response.ok) {
         const newProperty = await response.json();
-        const mapped = { ...newProperty, propertyId: newProperty.id };
+        let extra = {};
+        try { extra = JSON.parse(newProperty.description || '{}'); } catch(e) {}
+        const mapped = { ...extra, ...newProperty, propertyId: newProperty.id };
         setProperties(prev => [mapped, ...prev]);
         return mapped.propertyId;
       }
@@ -303,14 +311,24 @@ export const PropertyProvider = ({ children }) => {
 
   const updateProperty = async (id, data) => {
     try {
+      const hargaNum = Number(String(data.hargaJual || data.price || '0').replace(/\D/g, '')) || 0;
+      const payload = {
+        title: data.alamat || data.title || 'Tanpa Judul',
+        description: JSON.stringify(data),
+        price: hargaNum,
+        location: [data.kecamatan, data.kelurahan].filter(Boolean).join(', ') || data.location || '',
+        status: data.status || 'Listing'
+      };
       const response = await fetch(`${API_BASE_URL}/api/properties/${id}`, {
-        method: `PUT`,
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       });
       if (response.ok) {
         const updated = await response.json();
-        const mapped = { ...updated, propertyId: updated.id };
+        let extra = {};
+        try { extra = JSON.parse(updated.description || '{}'); } catch(e) {}
+        const mapped = { ...extra, ...updated, propertyId: updated.id };
         setProperties(prev => prev.map(p => p.propertyId === id ? mapped : p));
       }
     } catch (error) {

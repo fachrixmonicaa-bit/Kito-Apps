@@ -348,9 +348,9 @@ const CRMHub = () => {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filteredSurveys.length > 0 ? filteredSurveys.map(sv => {
-                  const lead = leads.find(l => l.id === sv.leadId);
-                  const lst = listings.find(l => l.listingId === sv.listingId);
-                  const prop = lst ? properties.find(p => p.propertyId === lst.propertyId) : null;
+                  const lead = leads.find(l => String(l.id) === String(sv.leadId));
+                  const lst = listings.find(l => String(l.listingId) === String(sv.listingId));
+                  const prop = lst ? properties.find(p => String(p.propertyId) === String(lst.propertyId)) : null;
                   return (
                     <tr key={sv.id} className="hover:bg-white/5 transition-colors group">
                       <td className="p-4 font-bold text-slate-300">{sv.pic || '-'}</td>
@@ -397,15 +397,16 @@ const CRMHub = () => {
                   <th className="p-4 font-semibold">Properti Target</th>
                   <th className="p-4 font-semibold">Harga Tawar</th>
                   <th className="p-4 font-semibold">Metode</th>
+                  <th className="p-4 font-semibold">Catatan</th>
                   <th className="p-4 font-semibold text-center">Status</th>
                   <th className="p-4 text-right font-semibold">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filteredOffers.length > 0 ? filteredOffers.map(o => {
-                  const lead = leads.find(l => l.id === o.leadId);
-                  const lst = listings.find(l => l.listingId === o.listingId);
-                  const prop = lst ? properties.find(p => p.propertyId === lst.propertyId) : null;
+                  const lead = leads.find(l => String(l.id) === String(o.leadId));
+                  const lst = listings.find(l => String(l.listingId) === String(o.listingId));
+                  const prop = lst ? properties.find(p => String(p.propertyId) === String(lst.propertyId)) : null;
                   return (
                     <tr key={o.id} className="hover:bg-white/5 transition-colors group">
                       <td className="p-4 font-bold text-slate-300">{o.pic || o.createdBy || '-'}</td>
@@ -422,6 +423,11 @@ const CRMHub = () => {
                       <td className="p-4">
                         <span className="text-xs bg-blue-500/10 text-blue-300 border border-blue-500/20 px-2 py-0.5 rounded-md">{o.metodePembayaran}</span>
                       </td>
+                      <td className="p-4 max-w-[150px]">
+                        <div className="text-xs text-slate-400 truncate" title={o.catatan || '-'}>
+                          {o.catatan || '-'}
+                        </div>
+                      </td>
                       <td className="p-4 text-center">
                         <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${offerStatusColor(o.status)}`}>{o.status}</span>
                       </td>
@@ -434,7 +440,7 @@ const CRMHub = () => {
                     </tr>
                   );
                 }) : (
-                  <tr><td colSpan="7" className="py-14 text-center text-slate-500"><Handshake size={28} className="mx-auto mb-2 opacity-20" />Belum ada penawaran.</td></tr>
+                  <tr><td colSpan="9" className="py-14 text-center text-slate-500"><Handshake size={28} className="mx-auto mb-2 opacity-20" />Belum ada penawaran.</td></tr>
                 )}
               </tbody>
             </table>

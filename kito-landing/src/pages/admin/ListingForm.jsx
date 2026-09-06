@@ -57,11 +57,11 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
 
   useEffect(() => {
     if (isEdit) {
-      const listingToEdit = listings.find(l => l.listingId === id);
+      const listingToEdit = listings.find(l => String(l.listingId) === String(id));
       if (listingToEdit) {
         // If we are editing, we also want to fetch the underlying physical property data
         // to populate the form, assuming it still exists.
-        const propToEdit = properties.find(p => p.propertyId === listingToEdit.propertyId) || {};
+        const propToEdit = properties.find(p => String(p.propertyId) === String(listingToEdit.propertyId)) || {};
         
         setFormData({
           ...propToEdit, // Load physical fields first

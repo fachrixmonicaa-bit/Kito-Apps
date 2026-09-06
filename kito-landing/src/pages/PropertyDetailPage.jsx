@@ -9,8 +9,8 @@ const PropertyDetailPage = () => {
   const { id } = useParams();
   const { properties, listings, addLead } = useProperties();
   
-  const listing = listings.find(l => l.listingId === id);
-  const prop = listing ? properties.find(p => p.propertyId === listing.propertyId) : null;
+  const listing = listings.find(l => String(l.listingId) === String(id));
+  const prop = listing ? properties.find(p => String(p.propertyId) === String(listing.propertyId)) : null;
   
   const property = listing && prop ? {
     id: listing.listingId,

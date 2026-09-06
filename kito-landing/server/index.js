@@ -273,7 +273,7 @@ app.delete('/api/listings/:id', async (req, res) => {
 });
 
 // Handle React routing, return all other requests to React app
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 

@@ -10,7 +10,8 @@ import { eq } from 'drizzle-orm';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+// Force port 5000 to avoid conflicts with Coolify's default env variables
+const PORT = 5000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +21,8 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Serve static files from the React frontend build
-app.use(express.static(path.join(__dirname, '../dist')));
+// In Docker, __dirname is /app and dist is /app/dist
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // Basic health check endpoint
 app.get('/api/health', (req, res) => {
@@ -272,7 +274,7 @@ app.delete('/api/listings/:id', async (req, res) => {
 
 // Handle React routing, return all other requests to React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {

@@ -28,8 +28,8 @@ const ListingManagement = () => {
     }
     
     // 2. Search filtering
-    return (l.listingId || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-           (l.agen || '').toLowerCase().includes(searchTerm.toLowerCase());
+    return String(l.listingId || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+           String(l.agen || '').toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   return (

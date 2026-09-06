@@ -91,14 +91,14 @@ const ListingManagement = () => {
             <tbody className="divide-y divide-white/5">
               {filteredListings.length > 0 ? (
                 filteredListings.map((listing, i) => {
-                  const propertyRef = properties.find(p => p.propertyId === listing.propertyId) || {};
+                  const propertyRef = properties.find(p => String(p.propertyId) === String(listing.propertyId)) || {};
                   
                   return (
                     <tr key={listing.listingId} className="hover:bg-white/5 transition-colors group">
                       <td className="p-4 text-center text-white/50">{i + 1}</td>
                       <td className="p-4">
                         <div className="font-mono text-sm font-bold text-white">{listing.listingId}</div>
-                        <div className="text-xs text-slate-400 mt-1">{new Date(listing.tanggalInput).toLocaleDateString('id-ID')}</div>
+                        <div className="text-xs text-slate-400 mt-1">{listing.tanggalInput ? new Date(listing.tanggalInput).toLocaleDateString('id-ID') : '-'}</div>
                       </td>
                       <td className="p-4 align-top max-w-[250px]">
                         {propertyRef.propertyId ? (

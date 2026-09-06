@@ -427,13 +427,16 @@ export const PropertyProvider = ({ children }) => {
         name: data.name || 'Unknown',
         phone: data.phone || '',
         email: data.email || '',
-        message: data.message || '',
-        propertyId: data.propertyId || '',
+        message: data.message || data.notes || '',
+        propertyId: data.propertyId || data.listingId || '',
         status: data.status || 'New',
-        createdBy: user?.name || 'Unknown'
+        createdBy: data.createdBy || user?.name || 'Unknown',
+        // Store extra fields as part of message or as extra key in supported columns
+        sumberLead: data.sumberLead || '',
+        notes: data.notes || data.message || ''
       };
       const response = await fetch(`${API_BASE_URL}/api/leads`, {
-        method: `POST`,
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
@@ -449,14 +452,26 @@ export const PropertyProvider = ({ children }) => {
 
   const updateLead = async (id, data) => {
     try {
+      const payload = {
+        name: data.name || 'Unknown',
+        phone: data.phone || '',
+        email: data.email || '',
+        message: data.message || data.notes || '',
+        propertyId: data.propertyId || data.listingId || '',
+        status: data.status || 'New',
+        createdBy: data.createdBy || user?.name || 'Unknown',
+        sumberLead: data.sumberLead || '',
+        notes: data.notes || data.message || ''
+      };
       const response = await fetch(`${API_BASE_URL}/api/leads/${id}`, {
-        method: `PUT`,
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       });
       if (response.ok) {
         const updated = await response.json();
-        setLeads(prev => prev.map(l => l.id === id ? updated : l));
+        // Use String comparison to handle number vs string ID mismatch
+        setLeads(prev => prev.map(l => String(l.id) === String(id) ? updated : l));
       }
     } catch (error) {
       console.error('Error updating lead:', error);
@@ -466,10 +481,10 @@ export const PropertyProvider = ({ children }) => {
   const deleteLead = async (id) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads/${id}`, {
-        method: `DELETE`
+        method: 'DELETE'
       });
       if (response.ok) {
-        setLeads(prev => prev.filter(l => l.id !== id));
+        setLeads(prev => prev.filter(l => String(l.id) !== String(id)));
       }
     } catch (error) {
       console.error('Error deleting lead:', error);

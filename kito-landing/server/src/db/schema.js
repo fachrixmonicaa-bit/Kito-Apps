@@ -29,6 +29,8 @@ export const lead = pgTable('Lead', {
   propertyId: varchar('propertyId', { length: 191 }),
   status: varchar('status', { length: 191 }).default('New').notNull(),
   createdBy: varchar('createdBy', { length: 191 }).default('Unknown'),
+  sumberLead: varchar('sumberLead', { length: 191 }).default(''),
+  notes: text('notes'),
   date: timestamp('date').defaultNow().notNull(),
 });
 

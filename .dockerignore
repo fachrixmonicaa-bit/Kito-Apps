@@ -3,4 +3,3 @@ node_modules
 .agents
 kito-landing/node_modules
 kito-landing/dist
-kito-landing/server

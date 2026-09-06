@@ -278,6 +278,7 @@ const CRMHub = () => {
                   <th className="p-4 font-semibold">Prospek</th>
                   <th className="p-4 font-semibold">Minat Listing</th>
                   <th className="p-4 font-semibold">Sumber Lead</th>
+                  <th className="p-4 font-semibold">Catatan</th>
                   <th className="p-4 font-semibold text-center">Status</th>
                   <th className="p-4 font-semibold">Tgl Masuk</th>
                   <th className="p-4 text-right font-semibold">Aksi</th>
@@ -306,6 +307,11 @@ const CRMHub = () => {
                           ? <span className="text-xs bg-blue-500/10 text-blue-300 border border-blue-500/20 px-2.5 py-1 rounded-full font-medium">{lead.sumberLead}</span>
                           : <span className="text-slate-500 italic text-xs">-</span>}
                       </td>
+                      <td className="p-4 max-w-[200px]">
+                        <div className="text-xs text-slate-400 truncate" title={lead.notes || lead.message || '-'}>
+                          {lead.notes || lead.message || '-'}
+                        </div>
+                      </td>
                       <td className="p-4 text-center">
                         <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${leadStatusColor(lead.status)}`}>{lead.status}</span>
                       </td>
@@ -319,7 +325,7 @@ const CRMHub = () => {
                     </tr>
                   );
                 }) : (
-                  <tr><td colSpan="6" className="py-14 text-center text-slate-500"><Users size={28} className="mx-auto mb-2 opacity-20" />Belum ada data leads.</td></tr>
+                  <tr><td colSpan="8" className="py-14 text-center text-slate-500"><Users size={28} className="mx-auto mb-2 opacity-20" />Belum ada data leads.</td></tr>
                 )}
               </tbody>
             </table>

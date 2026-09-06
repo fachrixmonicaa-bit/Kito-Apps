@@ -119,17 +119,23 @@ export const PropertyProvider = ({ children }) => {
 
   const [surveys, setSurveys] = useState([]);
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/surveys`).then(r => r.ok && r.json().then(setSurveys)).catch(console.error);
+    fetch(`${API_BASE_URL}/api/surveys`).then(r => r.ok && r.json().then(data => {
+      setSurveys(data.map(item => ({ ...item.data, ...item })));
+    })).catch(console.error);
   }, []);
 
   const [offers, setOffers] = useState([]);
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/offers`).then(r => r.ok && r.json().then(setOffers)).catch(console.error);
+    fetch(`${API_BASE_URL}/api/offers`).then(r => r.ok && r.json().then(data => {
+      setOffers(data.map(item => ({ ...item.data, ...item })));
+    })).catch(console.error);
   }, []);
 
   const [expenses, setExpenses] = useState([]);
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/expenses`).then(r => r.ok && r.json().then(setExpenses)).catch(console.error);
+    fetch(`${API_BASE_URL}/api/expenses`).then(r => r.ok && r.json().then(data => {
+      setExpenses(data.map(item => ({ ...item.data, ...item })));
+    })).catch(console.error);
   }, []);
 
   const [goals, setGoals] = useState(() => {
@@ -497,31 +503,33 @@ export const PropertyProvider = ({ children }) => {
   };
 
   // --- SURVEYS ---
-  const addSurvey = async (data) => {
+  const addSurvey = async (formData) => {
     try {
+      const { status, id, ...data } = formData;
       const response = await fetch(`${API_BASE_URL}/api/surveys`, {
-        method: `POST`,
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data })
+        body: JSON.stringify({ status, data })
       });
       if (response.ok) {
         const newSurvey = await response.json();
-        setSurveys(prev => [newSurvey, ...prev]);
+        setSurveys(prev => [{ ...newSurvey.data, ...newSurvey }, ...prev]);
         return newSurvey.id;
       }
     } catch (e) { console.error('Error adding survey', e); }
   };
 
-  const updateSurvey = async (id, data) => {
+  const updateSurvey = async (id, formData) => {
     try {
+      const { status, id: _id, date: _date, ...data } = formData;
       const response = await fetch(`${API_BASE_URL}/api/surveys/${id}`, {
-        method: `PUT`,
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data })
+        body: JSON.stringify({ status, data })
       });
       if (response.ok) {
         const updated = await response.json();
-        setSurveys(prev => prev.map(s => s.id === id ? updated : s));
+        setSurveys(prev => prev.map(s => String(s.id) === String(id) ? { ...updated.data, ...updated } : s));
       }
     } catch (e) { console.error('Error updating survey', e); }
   };
@@ -530,37 +538,39 @@ export const PropertyProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/surveys/${id}`, { method: `DELETE` });
       if (response.ok) {
-        setSurveys(prev => prev.filter(s => s.id !== id));
+        setSurveys(prev => prev.filter(s => String(s.id) !== String(id)));
       }
     } catch (e) { console.error('Error deleting survey', e); }
   };
 
   // --- OFFERS ---
-  const addOffer = async (data) => {
+  const addOffer = async (formData) => {
     try {
+      const { status, financeStatus, id, ...data } = formData;
       const response = await fetch(`${API_BASE_URL}/api/offers`, {
-        method: `POST`,
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ createdBy: user?.name || 'Unknown', data })
+        body: JSON.stringify({ status, financeStatus, createdBy: user?.name || 'Unknown', data })
       });
       if (response.ok) {
         const newOffer = await response.json();
-        setOffers(prev => [newOffer, ...prev]);
+        setOffers(prev => [{ ...newOffer.data, ...newOffer }, ...prev]);
         return newOffer.id;
       }
     } catch (e) { console.error('Error adding offer', e); }
   };
 
-  const updateOffer = async (id, data) => {
+  const updateOffer = async (id, formData) => {
     try {
+      const { status, financeStatus, id: _id, date: _date, createdBy: _cb, ...data } = formData;
       const response = await fetch(`${API_BASE_URL}/api/offers/${id}`, {
-        method: `PUT`,
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data })
+        body: JSON.stringify({ status, financeStatus, data })
       });
       if (response.ok) {
         const updated = await response.json();
-        setOffers(prev => prev.map(o => o.id === id ? updated : o));
+        setOffers(prev => prev.map(o => String(o.id) === String(id) ? { ...updated.data, ...updated } : o));
       }
     } catch (e) { console.error('Error updating offer', e); }
   };
@@ -569,37 +579,39 @@ export const PropertyProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/offers/${id}`, { method: `DELETE` });
       if (response.ok) {
-        setOffers(prev => prev.filter(o => o.id !== id));
+        setOffers(prev => prev.filter(o => String(o.id) !== String(id)));
       }
     } catch (e) { console.error('Error deleting offer', e); }
   };
 
   // --- EXPENSES ---
-  const addExpense = async (data) => {
+  const addExpense = async (formData) => {
     try {
+      const { id, date: _date, createdBy: _cb, ...data } = formData;
       const response = await fetch(`${API_BASE_URL}/api/expenses`, {
-        method: `POST`,
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ createdBy: user?.name || 'Unknown', data })
       });
       if (response.ok) {
         const newExpense = await response.json();
-        setExpenses(prev => [newExpense, ...prev]);
+        setExpenses(prev => [{ ...newExpense.data, ...newExpense }, ...prev]);
         return newExpense.id;
       }
     } catch (e) { console.error('Error adding expense', e); }
   };
 
-  const updateExpense = async (id, data) => {
+  const updateExpense = async (id, formData) => {
     try {
+      const { id: _id, date: _date, createdBy: _cb, ...data } = formData;
       const response = await fetch(`${API_BASE_URL}/api/expenses/${id}`, {
-        method: `PUT`,
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data })
       });
       if (response.ok) {
         const updated = await response.json();
-        setExpenses(prev => prev.map(e => e.id === id ? updated : e));
+        setExpenses(prev => prev.map(e => String(e.id) === String(id) ? { ...updated.data, ...updated } : e));
       }
     } catch (e) { console.error('Error updating expense', e); }
   };
@@ -608,7 +620,7 @@ export const PropertyProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/expenses/${id}`, { method: `DELETE` });
       if (response.ok) {
-        setExpenses(prev => prev.filter(e => e.id !== id));
+        setExpenses(prev => prev.filter(e => String(e.id) !== String(id)));
       }
     } catch (e) { console.error('Error deleting expense', e); }
   };

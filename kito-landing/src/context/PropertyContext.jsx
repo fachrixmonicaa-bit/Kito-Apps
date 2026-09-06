@@ -305,8 +305,38 @@ export const PropertyProvider = ({ children }) => {
   };
 
   const addBulkProperties = async (dataArray) => {
-    console.warn("Bulk insert properties not yet implemented with backend");
-    return 0;
+    let successCount = 0;
+    const newItems = [];
+    for (const data of dataArray) {
+      try {
+        const hargaNum = Number(String(data.hargaJual || data.price || '0').replace(/\D/g, '')) || 0;
+        const payload = {
+          title: data.alamat || data.title || 'Tanpa Judul',
+          description: JSON.stringify(data),
+          price: hargaNum,
+          location: [data.kecamatan, data.kelurahan].filter(Boolean).join(', ') || data.location || '',
+          status: data.status || 'Listing'
+        };
+        const response = await fetch(`${API_BASE_URL}/api/properties`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (response.ok) {
+          const newProperty = await response.json();
+          let extra = {};
+          try { extra = JSON.parse(newProperty.description || '{}'); } catch(e) {}
+          newItems.push({ ...extra, ...newProperty, propertyId: newProperty.id });
+          successCount++;
+        }
+      } catch (error) {
+        console.error('Error bulk inserting property:', error);
+      }
+    }
+    if (newItems.length > 0) {
+      setProperties(prev => [...newItems, ...prev]);
+    }
+    return successCount;
   };
 
   const updateProperty = async (id, data) => {

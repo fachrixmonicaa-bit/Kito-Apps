@@ -12,6 +12,7 @@ const PropertyManagement = () => {
   const { properties, deleteProperty, addBulkProperties } = useProperty();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [isImporting, setIsImporting] = useState(false);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -20,7 +21,7 @@ const PropertyManagement = () => {
     Papa.parse(file, {
       header: false,
       skipEmptyLines: true,
-      complete: (results) => {
+      complete: async (results) => {
         const rows = results.data;
         
         let colMap = {
@@ -85,8 +86,13 @@ const PropertyManagement = () => {
         }).filter(item => item !== null); 
         
         if (formattedData.length > 0) {
-          addBulkProperties(formattedData);
-          alert(`${formattedData.length} properti berhasil di-import dari CSV!`);
+          setIsImporting(true);
+          try {
+            const count = await addBulkProperties(formattedData);
+            alert(`✅ ${count} dari ${formattedData.length} properti berhasil di-import ke database!`);
+          } finally {
+            setIsImporting(false);
+          }
         } else {
           alert('Tidak ada data valid yang bisa di-import. Pastikan format kolom sesuai standar (memiliki Kecamatan dan Jenis).');
         }
@@ -120,10 +126,10 @@ const PropertyManagement = () => {
           <p className="text-slate-400">Pusat data fisik dan legalitas seluruh properti.</p>
         </div>
         <div className="flex items-center gap-3">
-          <label className="cursor-pointer px-5 py-3 bg-white/10 text-white font-medium rounded-xl hover:bg-white/20 border border-white/10 transition-colors flex items-center gap-2 whitespace-nowrap shadow-lg">
-            <Upload size={18} />
-            <span className="hidden sm:inline">Upload CSV</span>
-            <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
+          <label className={`cursor-pointer px-5 py-3 bg-white/10 text-white font-medium rounded-xl hover:bg-white/20 border border-white/10 transition-colors flex items-center gap-2 whitespace-nowrap shadow-lg ${isImporting ? 'opacity-60 pointer-events-none' : ''}`}>
+            <Upload size={18} className={isImporting ? 'animate-spin' : ''} />
+            <span className="hidden sm:inline">{isImporting ? 'Mengimpor...' : 'Upload CSV'}</span>
+            <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} disabled={isImporting} />
           </label>
           <Link 
             to="/admin/properties/add" 

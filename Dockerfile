@@ -1,26 +1,29 @@
 # Stage 1: Build the React application
-FROM node:20-alpine AS build
-WORKDIR /app
+FROM node:20-alpine AS frontend-build
+WORKDIR /app/frontend
 
-# Copy package files from kito-landing subfolder
-COPY kito-landing/package.json kito-landing/package-lock.json ./
-
+COPY kito-landing/package*.json ./
 RUN npm install
 
-# Copy the rest of kito-landing source
 COPY kito-landing/ .
-
-# Build the React app
 RUN npm run build
 
-# Stage 2: Serve with Nginx
-FROM nginx:alpine
+# Stage 2: Build the Node.js Express server
+FROM node:20-alpine
+WORKDIR /app
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy server package.json and install dependencies
+COPY kito-landing/server/package*.json ./
+RUN npm install --production
 
-# Copy built files
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy server code
+COPY kito-landing/server/ .
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Copy built frontend from Stage 1 into /app/dist
+COPY --from=frontend-build /app/frontend/dist /app/dist
+
+# Expose the backend port (default 5000)
+EXPOSE 5000
+
+# Start the server
+CMD ["node", "index.js"]

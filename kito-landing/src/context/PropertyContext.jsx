@@ -56,7 +56,8 @@ export const predictBuildingPrice = (jenis, kondisi, tingkat, settings) => {
 };
 
 export const PropertyProvider = ({ children }) => {
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  // Use relative path for API calls since frontend and backend are now unified
+  const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
   const { user } = useAuth();
 

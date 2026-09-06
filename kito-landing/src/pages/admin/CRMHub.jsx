@@ -500,10 +500,10 @@ const CRMHub = () => {
 
       {/* SURVEY MODAL */}
       {modal?.type === 'survey' && (
-        <Modal title={modal.id ? 'Edit Jadwal Survey' : 'Jadwalkan Survey'} onClose={closeModal} formId="survey-form" onSubmit={handleSaveSurvey}>
-          <Field label="Pilih Lead / Prospek">
+        <Modal title={modal.id ? 'Edit Jadwal Survey' : 'Buat Jadwal Survey'} onClose={closeModal} formId="survey-form" onSubmit={handleSaveSurvey}>
+          <Field label="Pembeli (Lead)">
             <select value={surveyForm.leadId} onChange={e => {
-              const lead = leads.find(l => l.id === e.target.value);
+              const lead = leads.find(l => String(l.id) === String(e.target.value));
               setSurveyForm({...surveyForm, leadId: e.target.value, listingId: lead?.listingId || surveyForm.listingId});
             }} className={selectCls} required>
               <option value="">-- Pilih Lead --</option>
@@ -545,7 +545,7 @@ const CRMHub = () => {
           <div className="grid grid-cols-2 gap-4">
             <Field label="Pembeli (Lead)">
               <select value={offerForm.leadId} onChange={e => {
-                const lead = leads.find(l => l.id === e.target.value);
+                const lead = leads.find(l => String(l.id) === String(e.target.value));
                 setOfferForm({...offerForm, leadId: e.target.value, listingId: lead?.listingId || offerForm.listingId});
               }} className={selectCls} required>
                 <option value="">-- Pilih Lead --</option>

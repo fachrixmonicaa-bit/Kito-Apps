@@ -8,6 +8,13 @@ const formatCurrency = (num) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 };
 
+const safeDate = (dateStr) => {
+  if (!dateStr) return '-';
+  const d = new Date(dateStr);
+  if (isNaN(d)) return '-';
+  return d.toLocaleDateString('id-ID');
+};
+
 const ListingManagement = () => {
   const { listings, properties, deleteListing } = useProperty();
   const { user } = useAuth();
@@ -98,7 +105,7 @@ const ListingManagement = () => {
                       <td className="p-4 text-center text-white/50">{i + 1}</td>
                       <td className="p-4">
                         <div className="font-mono text-sm font-bold text-white">{listing.listingId}</div>
-                        <div className="text-xs text-slate-400 mt-1">{listing.tanggalInput ? new Date(listing.tanggalInput).toLocaleDateString('id-ID') : '-'}</div>
+                        <div className="text-xs text-slate-400 mt-1">{safeDate(listing.tanggalInput)}</div>
                       </td>
                       <td className="p-4 align-top max-w-[250px]">
                         {propertyRef.propertyId ? (
@@ -137,7 +144,7 @@ const ListingManagement = () => {
                         <div className="font-medium text-slate-200">{listing.agen || '-'}</div>
                       </td>
                       <td className="p-4 text-center">
-                        <span className="text-rose-300 font-medium">{listing.tanggalBerakhir ? new Date(listing.tanggalBerakhir).toLocaleDateString('id-ID') : '-'}</span>
+                        <span className="text-rose-300 font-medium">{safeDate(listing.tanggalBerakhir)}</span>
                       </td>
                       <td className="p-4 text-center">
                         <span className={`inline-block px-2 py-1 text-[10px] font-bold rounded ${listing.status === 'Aktif' ? 'bg-emerald-500/20 text-emerald-400' : listing.status === 'Terjual' ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-500/20 text-slate-400'}`}>

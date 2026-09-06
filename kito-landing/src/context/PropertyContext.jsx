@@ -253,14 +253,19 @@ export const PropertyProvider = ({ children }) => {
 
   const updateArticle = async (id, data) => {
     try {
+      // Prevent updating primary key and auto-generated fields
+      const { id: _id, articleId: _aid, tanggalInput: _ti, ...payload } = data;
       const response = await fetch(`${API_BASE_URL}/api/articles/${id}`, {
-        method: `PUT`,
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       });
       if (response.ok) {
         const updated = await response.json();
         setArticles(prev => prev.map(a => (String(a.articleId) === String(id) || String(a.id) === String(id)) ? updated : a));
+      } else {
+        const err = await response.json();
+        console.error('Update Article Error:', err);
       }
     } catch (e) { console.error('Error updating article', e); }
   };

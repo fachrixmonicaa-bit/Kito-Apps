@@ -150,14 +150,20 @@ app.put('/api/articles/:id', async (req, res) => {
     const { id } = req.params;
     const result = await db.update(article).set(req.body).where(eq(article.id, Number(id))).returning();
     res.json(result[0]);
-  } catch (error) { res.status(500).json({ error: "Internal server error" }); }
+  } catch (error) { 
+    console.error("PUT /api/articles/:id error:", error);
+    res.status(500).json({ error: "Internal server error" }); 
+  }
 });
 app.delete('/api/articles/:id', async (req, res) => {
   try {
     const { id } = req.params;
     await db.delete(article).where(eq(article.id, Number(id)));
     res.json({ success: true });
-  } catch (error) { res.status(500).json({ error: "Internal server error" }); }
+  } catch (error) { 
+    console.error("DELETE /api/articles/:id error:", error);
+    res.status(500).json({ error: "Internal server error" }); 
+  }
 });
 
 // ====== SURVEYS ======

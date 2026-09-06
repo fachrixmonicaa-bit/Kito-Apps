@@ -93,7 +93,7 @@ const NewsManagement = () => {
                 </tr>
               ) : (
                 filteredArticles.map(article => (
-                  <tr key={article.articleId} className="hover:bg-slate-700/30 transition-colors group">
+                  <tr key={article.articleId || article.id} className="hover:bg-slate-700/30 transition-colors group">
                     <td className="p-4">
                       <div className="flex items-start gap-4">
                         <div className="w-16 h-12 bg-slate-900 rounded-lg overflow-hidden flex-shrink-0 border border-slate-700">
@@ -106,7 +106,7 @@ const NewsManagement = () => {
                           )}
                         </div>
                         <div>
-                          <div className="font-bold text-white text-sm line-clamp-1 mb-1 group-hover:text-primary transition-colors cursor-pointer" onClick={() => navigate(`/admin/news/edit/${article.articleId}`)}>
+                          <div className="font-bold text-white text-sm line-clamp-1 mb-1 group-hover:text-primary transition-colors cursor-pointer" onClick={() => navigate(`/admin/news/edit/${article.articleId || article.id}`)}>
                             {article.title}
                           </div>
                           <div className="text-xs text-slate-400 line-clamp-1">{article.excerpt}</div>
@@ -138,7 +138,7 @@ const NewsManagement = () => {
                       <div className="flex items-center justify-end gap-2">
                         {article.status === 'Published' && (
                           <a 
-                            href={`/news/${article.articleId}`} 
+                            href={`/news/${article.articleId || article.id}`} 
                             target="_blank" 
                             rel="noreferrer"
                             className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors tooltip"
@@ -155,14 +155,14 @@ const NewsManagement = () => {
                           {article.status === 'Published' ? <Eye size={18} className="opacity-50" /> : <Eye size={18} />}
                         </button>
                         <button 
-                          onClick={() => navigate(`/admin/news/edit/${article.articleId}`)}
+                          onClick={() => navigate(`/admin/news/edit/${article.articleId || article.id}`)}
                           className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors tooltip"
                           title="Edit Artikel"
                         >
                           <Edit2 size={18} />
                         </button>
                         <button 
-                          onClick={() => handleDelete(article.articleId)}
+                          onClick={() => handleDelete(article.articleId || article.id)}
                           className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-400/10 rounded-lg transition-colors tooltip"
                           title="Hapus"
                         >

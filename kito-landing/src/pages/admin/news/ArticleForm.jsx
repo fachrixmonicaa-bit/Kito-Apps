@@ -21,7 +21,7 @@ const ArticleForm = () => {
 
   useEffect(() => {
     if (id && articles) {
-      const existing = articles.find(a => a.articleId === id);
+      const existing = articles.find(a => String(a.articleId) === String(id) || String(a.id) === String(id));
       if (existing) {
         setFormData(existing);
       }

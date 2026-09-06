@@ -260,7 +260,7 @@ export const PropertyProvider = ({ children }) => {
       });
       if (response.ok) {
         const updated = await response.json();
-        setArticles(prev => prev.map(a => (a.articleId === id || a.id === id) ? updated : a));
+        setArticles(prev => prev.map(a => (String(a.articleId) === String(id) || String(a.id) === String(id)) ? updated : a));
       }
     } catch (e) { console.error('Error updating article', e); }
   };
@@ -269,7 +269,7 @@ export const PropertyProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/articles/${id}`, { method: `DELETE` });
       if (response.ok) {
-        setArticles(prev => prev.filter(a => a.articleId !== id && a.id !== id));
+        setArticles(prev => prev.filter(a => String(a.articleId) !== String(id) && String(a.id) !== String(id)));
       }
     } catch (e) { console.error('Error deleting article', e); }
   };

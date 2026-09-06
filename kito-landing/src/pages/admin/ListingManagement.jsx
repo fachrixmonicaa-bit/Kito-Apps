@@ -85,11 +85,12 @@ const ListingManagement = () => {
             <thead className="bg-slate-900/40 border-b border-white/10 font-semibold text-slate-300">
               <tr>
                 <th className="p-4 w-12 text-center">No</th>
-                <th className="p-4">Listing ID</th>
-                <th className="p-4">Properti Terkait</th>
-                <th className="p-4">Tipe Listing</th>
+                <th className="p-4">Listing ID & Judul</th>
+                <th className="p-4">Lokasi & Tipe</th>
+                <th className="p-4">Spesifikasi</th>
+                <th className="p-4">Legal & Kondisi</th>
+                <th className="p-4">Tipe & Agen</th>
                 <th className="p-4">Harga Publik</th>
-                <th className="p-4">Agen Bertugas</th>
                 <th className="p-4 text-center">Tgl Expired</th>
                 <th className="p-4 text-center">Status</th>
                 <th className="p-4 text-right">Aksi</th>
@@ -105,6 +106,7 @@ const ListingManagement = () => {
                       <td className="p-4 text-center text-white/50">{i + 1}</td>
                       <td className="p-4">
                         <div className="font-mono text-sm font-bold text-white">{listing.listingId}</div>
+                        <div className="text-sm font-semibold text-primary truncate max-w-[200px]" title={listing.judulListing}>{listing.judulListing || 'Tanpa Judul'}</div>
                         <div className="text-xs text-slate-400 mt-1">{safeDate(listing.tanggalInput)}</div>
                       </td>
                       <td className="p-4 align-top max-w-[250px]">
@@ -130,9 +132,22 @@ const ListingManagement = () => {
                         )}
                       </td>
                       <td className="p-4">
-                        <span className={`inline-block px-2 py-1 text-[10px] uppercase font-bold rounded border ${listing.tipeListing === 'Exclusive' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30'}`}>
+                        <div className="flex flex-col gap-1 text-xs text-slate-300">
+                          <div>LT: <span className="font-semibold text-white">{propertyRef.luasTanah || '-'}</span> m² | LB: <span className="font-semibold text-white">{propertyRef.luasBangunan || '-'}</span> m²</div>
+                          <div>KT: <span className="font-semibold text-white">{propertyRef.kamarTidur || '-'}</span> | KM: <span className="font-semibold text-white">{propertyRef.kamarMandi || '-'}</span></div>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex flex-col gap-1 text-xs text-slate-300">
+                          <div>Legal: <span className="font-semibold text-blue-400">{propertyRef.legalitas || '-'}</span></div>
+                          <div>Kondisi: <span className="font-semibold text-emerald-400">{propertyRef.kondisiProperti || '-'}</span></div>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <span className={`inline-block px-2 py-1 text-[10px] uppercase font-bold rounded border mb-1 ${listing.tipeListing === 'Exclusive' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30'}`}>
                           {listing.tipeListing || 'REGULAR'}
                         </span>
+                        <div className="font-medium text-slate-200 text-xs truncate max-w-[150px]">{listing.agen || '-'}</div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
@@ -140,11 +155,8 @@ const ListingManagement = () => {
                           <span className="font-bold text-white">{formatCurrency(listing.hargaListing)}</span>
                         </div>
                       </td>
-                      <td className="p-4">
-                        <div className="font-medium text-slate-200">{listing.agen || '-'}</div>
-                      </td>
                       <td className="p-4 text-center">
-                        <span className="text-rose-300 font-medium">{safeDate(listing.tanggalBerakhir)}</span>
+                        <span className="text-rose-300 font-medium text-xs">{safeDate(listing.tanggalBerakhir)}</span>
                       </td>
                       <td className="p-4 text-center">
                         <span className={`inline-block px-2 py-1 text-[10px] font-bold rounded ${listing.status === 'Aktif' ? 'bg-emerald-500/20 text-emerald-400' : listing.status === 'Terjual' ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-500/20 text-slate-400'}`}>
@@ -178,7 +190,7 @@ const ListingManagement = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan="9" className="p-12 text-center">
+                  <td colSpan="10" className="p-12 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
                         <List size={24} className="text-slate-500" />

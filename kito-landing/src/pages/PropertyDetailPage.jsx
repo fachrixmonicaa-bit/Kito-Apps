@@ -26,7 +26,17 @@ const PropertyDetailPage = () => {
       { label: 'Luas Bangunan', value: `${prop.luasBangunan || 0} m²` },
       ...(prop.kamarTidur ? [{ label: 'Kamar Tidur', value: prop.kamarTidur }] : []),
       ...(prop.kamarMandi ? [{ label: 'Kamar Mandi', value: prop.kamarMandi }] : [])
-    ]
+    ],
+    // New fields for comprehensive visualization
+    legalitas: prop.legalitas || '-',
+    tingkatBangunan: prop.tingkatBangunan || '-',
+    kondisiProperti: prop.kondisiProperti || '-',
+    aksesJalan: prop.aksesJalan || '-',
+    posisiObjek: prop.posisiObjek || '-',
+    skorMitigasi: prop.skorMitigasi || '-',
+    skorUtilitas: prop.skorUtilitas || '-',
+    zonaKawasan: prop.zonaKawasan || '-',
+    zonaPerkembangan: prop.zonaPerkembangan || '-'
   } : null;
 
   const [contactName, setContactName] = useState('');
@@ -136,6 +146,56 @@ const PropertyDetailPage = () => {
                 <p className="text-slate-600 leading-relaxed whitespace-pre-line">
                   {property.description}
                 </p>
+              </div>
+
+              {/* Detail Tambahan */}
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Detail Spesifikasi</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                  <div>
+                    <span className="block text-slate-400 text-sm mb-1">Sertifikat / Legalitas</span>
+                    <span className="font-semibold text-slate-800">{property.legalitas}</span>
+                  </div>
+                  <div>
+                    <span className="block text-slate-400 text-sm mb-1">Tingkat Bangunan</span>
+                    <span className="font-semibold text-slate-800">{property.tingkatBangunan}</span>
+                  </div>
+                  <div>
+                    <span className="block text-slate-400 text-sm mb-1">Kondisi Properti</span>
+                    <span className="font-semibold text-slate-800">{property.kondisiProperti}</span>
+                  </div>
+                  <div>
+                    <span className="block text-slate-400 text-sm mb-1">Akses Jalan</span>
+                    <span className="font-semibold text-slate-800">{property.aksesJalan}</span>
+                  </div>
+                  <div>
+                    <span className="block text-slate-400 text-sm mb-1">Posisi Objek</span>
+                    <span className="font-semibold text-slate-800">{property.posisiObjek}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Analisis Kawasan */}
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Analisis Kawasan & Risiko</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <span className="block text-slate-400 text-xs mb-1">Zona Kawasan</span>
+                    <span className="font-semibold text-slate-800">{property.zonaKawasan}</span>
+                  </div>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <span className="block text-slate-400 text-xs mb-1">Perkembangan</span>
+                    <span className="font-semibold text-slate-800">{property.zonaPerkembangan}</span>
+                  </div>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <span className="block text-slate-400 text-xs mb-1">Skor Mitigasi</span>
+                    <span className="font-bold text-primary">{property.skorMitigasi} / 5</span>
+                  </div>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <span className="block text-slate-400 text-xs mb-1">Skor Utilitas</span>
+                    <span className="font-bold text-blue-500">{property.skorUtilitas} / 5</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -209,7 +209,7 @@ const SpecificationFilter = ({
   );
 };
 
-const ListingCard = ({ id, image, title, priceStr, location, specs, exclusive, beds, baths, status }) => {
+const ListingCard = ({ id, image, title, priceStr, location, specs, exclusive, beds, baths, status, legalitas }) => {
   const navigate = useNavigate();
   return (
     <div 
@@ -234,6 +234,11 @@ const ListingCard = ({ id, image, title, priceStr, location, specs, exclusive, b
           <div className="bg-white/90 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2 py-1 rounded-full shadow-md w-max">
             {status}
           </div>
+          {legalitas && (
+            <div className="bg-blue-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md w-max">
+              {legalitas}
+            </div>
+          )}
         </div>
 
         <div className="absolute top-2 right-2">
@@ -375,8 +380,9 @@ const PropertyListPage = () => {
         { label: 'LT', value: `${p.luasTanah || 0}m²` },
         { label: 'LB', value: `${p.luasBangunan || 0}m²` }
       ],
-      beds: p.kamarTidur || (p.jenisProperti === 'Rumah' ? '2' : null),
-      baths: p.kamarMandi || (p.jenisProperti === 'Rumah' ? '1' : null),
+      beds: p.kamarTidur,
+      baths: p.kamarMandi,
+      legalitas: p.legalitas,
       exclusive: l.tipeListing === 'Exclusive',
       // For filtering
       rawLT: parseInt(p.luasTanah) || 0,

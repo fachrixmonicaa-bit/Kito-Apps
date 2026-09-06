@@ -199,7 +199,7 @@ const PropertyManagement = () => {
                       PR-{String(i + 1).padStart(4, '0')}
                     </td>
                     <td className="p-4 text-center text-slate-400">
-                      {prop.waktu ? new Date(prop.waktu).toLocaleDateString('id-ID') : new Date(prop.tanggalInput).toLocaleDateString('id-ID')}
+                      {(() => { try { const d = prop.waktu || prop.createdAt || prop.tanggalInput; return d ? new Date(d).toLocaleDateString('id-ID') : '-'; } catch(e) { return '-'; } })()}
                     </td>
                     <td className="p-4 text-center">
                       <span className="inline-block px-2 py-1 bg-white/10 text-slate-300 text-[10px] font-bold rounded">
@@ -221,7 +221,7 @@ const PropertyManagement = () => {
                     <td className="p-4 text-center">
                       <span className="text-blue-400 font-semibold">{prop.legalitas}</span>
                     </td>
-                    <td className="p-4 font-bold text-white text-right">{formatCurrency(prop.hargaJual)}</td>
+                    <td className="p-4 font-bold text-white text-right">{formatCurrency(Number(String(prop.hargaJual || '0').replace(/\D/g, '')) || 0)}</td>
                     <td className="p-4 text-center">
                       <div className="flex items-center justify-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <button 

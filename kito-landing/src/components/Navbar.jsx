@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const navbarClasses = isLandingPage && !isScrolled
     ? 'bg-transparent border-transparent py-2'
-    : 'bg-[#EACE40] shadow-md border-b border-yellow-500/30';
+    : 'bg-white shadow-md border-b border-slate-100';
 
   const textClasses = isLandingPage && !isScrolled ? 'text-white' : 'text-slate-900';
   const buttonClasses = isLandingPage && !isScrolled

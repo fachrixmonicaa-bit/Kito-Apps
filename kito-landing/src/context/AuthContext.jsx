@@ -1,68 +1,90 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 
 const AuthContext = createContext();
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+const TOKEN_KEY = 'kito_token';
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('kito_auth') === 'true';
-  });
-  
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('kito_user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // validate token on mount
 
+  // On mount: validate saved token against /api/auth/me
   useEffect(() => {
-    localStorage.setItem('kito_auth', isAuthenticated);
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('kito_user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('kito_user');
-    }
-  }, [user]);
-
-  const login = (role = 'admin') => {
-    let userData = {
-      name: 'Admin Kito',
-      email: 'admin@kitoapps.com',
-      role: 'admin'
+    const validateSession = async () => {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+          setIsAuthenticated(true);
+        } else {
+          // Token invalid/expired — clear it
+          localStorage.removeItem(TOKEN_KEY);
+        }
+      } catch {
+        localStorage.removeItem(TOKEN_KEY);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    
-    if (role === 'agen1') {
-      userData = { name: 'Agen 1', email: 'agen1@kitoapps.com', role: 'agent' };
-    } else if (role === 'agen2') {
-      userData = { name: 'Agen 2', email: 'agen2@kitoapps.com', role: 'agent' };
+    validateSession();
+  }, []);
+
+  /**
+   * Login with email + password.
+   * Returns { success: true } or { success: false, error: string }
+   */
+  const login = async (email, password) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { success: false, error: data.error || 'Login gagal.' };
+      }
+      localStorage.setItem(TOKEN_KEY, data.token);
+      setUser(data.user);
+      setIsAuthenticated(true);
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Tidak dapat terhubung ke server.' };
     }
-
-    const savedProfiles = JSON.parse(localStorage.getItem('kito_profiles') || '{}');
-    if (savedProfiles[userData.email]) {
-      userData = { ...userData, ...savedProfiles[userData.email] };
-    }
-
-    setUser(userData);
-    setIsAuthenticated(true);
-    return true;
-  };
-
-  const updateProfile = (updates) => {
-    const updatedUser = { ...user, ...updates };
-    setUser(updatedUser);
-    
-    const savedProfiles = JSON.parse(localStorage.getItem('kito_profiles') || '{}');
-    savedProfiles[user.email] = updatedUser;
-    localStorage.setItem('kito_profiles', JSON.stringify(savedProfiles));
   };
 
   const logout = () => {
+    localStorage.removeItem(TOKEN_KEY);
     setIsAuthenticated(false);
     setUser(null);
   };
 
+  /**
+   * Update local user profile (name, photo, etc.)
+   * Optionally persists to backend if an update endpoint exists.
+   */
+  const updateProfile = (updates) => {
+    setUser(prev => ({ ...prev, ...updates }));
+  };
+
+  /**
+   * Get the current auth token for API calls
+   */
+  const getToken = useCallback(() => {
+    return localStorage.getItem(TOKEN_KEY);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, updateProfile }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, updateProfile, getToken, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -4,8 +4,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { db } from './src/db/index.js';
-import { property, lead, article, survey, offer, expense, listing } from './src/db/schema.js';
+import { property, lead, article, survey, offer, expense, listing, user } from './src/db/schema.js';
 import { eq } from 'drizzle-orm';
+import { hashPassword, verifyPassword, generateToken, verifyToken } from './src/lib/auth.js';
 
 dotenv.config();
 
@@ -28,6 +29,121 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running!' });
 });
+
+// ====== AUTH ======
+
+// POST /api/auth/login
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email dan password wajib diisi.' });
+    }
+
+    const [foundUser] = await db.select().from(user).where(eq(user.email, email.toLowerCase().trim()));
+    if (!foundUser) {
+      return res.status(401).json({ error: 'Email atau password salah.' });
+    }
+
+    const isValid = await verifyPassword(password, foundUser.password);
+    if (!isValid) {
+      return res.status(401).json({ error: 'Email atau password salah.' });
+    }
+
+    const token = generateToken(foundUser);
+    const { password: _, ...userWithoutPassword } = foundUser;
+
+    res.json({ token, user: userWithoutPassword });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// GET /api/auth/me — validate token & return current user
+app.get('/api/auth/me', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Token tidak ditemukan.' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ error: 'Token tidak valid atau sudah expired.' });
+    }
+
+    const [foundUser] = await db.select().from(user).where(eq(user.id, decoded.id));
+    if (!foundUser) {
+      return res.status(401).json({ error: 'User tidak ditemukan.' });
+    }
+
+    const { password: _, ...userWithoutPassword } = foundUser;
+    res.json({ user: userWithoutPassword });
+  } catch (error) {
+    console.error('Auth/me error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/auth/register — create new user (admin only in production)
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { email, password, name, role = 'agent' } = req.body;
+    if (!email || !password || !name) {
+      return res.status(400).json({ error: 'Email, password, dan nama wajib diisi.' });
+    }
+
+    const [existing] = await db.select().from(user).where(eq(user.email, email.toLowerCase().trim()));
+    if (existing) {
+      return res.status(409).json({ error: 'Email sudah terdaftar.' });
+    }
+
+    const hashedPassword = await hashPassword(password);
+    const [newUser] = await db.insert(user).values({
+      email: email.toLowerCase().trim(),
+      name,
+      password: hashedPassword,
+      role
+    }).returning();
+
+    const { password: _, ...userWithoutPassword } = newUser;
+    res.json({ user: userWithoutPassword });
+  } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/auth/change-password
+app.post('/api/auth/change-password', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Token tidak ditemukan.' });
+    }
+    const token = authHeader.split(' ')[1];
+    const decoded = verifyToken(token);
+    if (!decoded) return res.status(401).json({ error: 'Token tidak valid.' });
+
+    const { currentPassword, newPassword } = req.body;
+    const [foundUser] = await db.select().from(user).where(eq(user.id, decoded.id));
+    if (!foundUser) return res.status(404).json({ error: 'User tidak ditemukan.' });
+
+    const isValid = await verifyPassword(currentPassword, foundUser.password);
+    if (!isValid) return res.status(401).json({ error: 'Password lama salah.' });
+
+    const hashedPassword = await hashPassword(newPassword);
+    await db.update(user).set({ password: hashedPassword, updatedAt: new Date() }).where(eq(user.id, decoded.id));
+
+    res.json({ success: true, message: 'Password berhasil diubah.' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 // Example endpoint: Get all properties
 app.get('/api/properties', async (req, res) => {

@@ -40,8 +40,20 @@ import FinanceDashboard from './pages/admin/FinanceDashboard';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
+
+  // While validating token, show a minimal loading screen
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-slate-400 text-sm">Memverifikasi sesi...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;

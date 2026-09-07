@@ -171,14 +171,14 @@ const AdLauncher = () => {
   const [selectedListingId, setSelectedListingId] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState('whatsapp');
 
-  const activeListings = listings.filter(l => l.status === 'Aktif');
+  const activeListings = listings.filter(l => !l.status || l.status === 'Aktif' || l.status === 'aktif' || l.status === 'Active');
 
   const selectedListing = useMemo(() =>
-    listings.find(l => l.listingId === selectedListingId), [listings, selectedListingId]);
+    listings.find(l => String(l.listingId) === String(selectedListingId)), [listings, selectedListingId]);
 
   const selectedProperty = useMemo(() =>
     selectedListing
-      ? properties.find(p => p.propertyId === selectedListing.propertyId)
+      ? properties.find(p => String(p.propertyId) === String(selectedListing.propertyId)) || null
       : null,
     [selectedListing, properties]);
 
@@ -271,7 +271,7 @@ const AdLauncher = () => {
         )}
       </div>
 
-      {selectedListingId && selectedListing && selectedProperty && (
+      {selectedListingId && selectedListing && (
         <>
           {/* STEP 2: PILIH PLATFORM */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 md:p-8 shadow-2xl mb-6">

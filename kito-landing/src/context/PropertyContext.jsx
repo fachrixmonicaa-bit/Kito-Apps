@@ -95,7 +95,17 @@ export const PropertyProvider = ({ children }) => {
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/listings`)
       .then(r => r.ok && r.json().then(data => {
-        const mapped = data.map(l => ({ ...l.data, listingId: l.id, id: l.id, tanggalInput: l.tanggalInput }));
+        const mapped = data.map(l => {
+          // Prefer top-level propertyId column; fallback to data.propertyId for legacy records
+          const resolvedPropertyId = l.propertyId || (l.data && typeof l.data.propertyId === 'number' ? l.data.propertyId : null);
+          return {
+            ...(l.data || {}),
+            listingId: l.id,
+            id: l.id,
+            tanggalInput: l.tanggalInput,
+            propertyId: resolvedPropertyId
+          };
+        });
         setListings(mapped);
       })).catch(console.error);
   }, []);
@@ -360,7 +370,7 @@ export const PropertyProvider = ({ children }) => {
         location: [data.kecamatan, data.kelurahan].filter(Boolean).join(', ') || data.location || '',
         status: data.status || 'Listing'
       };
-      const response = await fetch(`${API_BASE_URL}/api/properties/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/properties/${String(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -379,7 +389,7 @@ export const PropertyProvider = ({ children }) => {
 
   const deleteProperty = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/properties/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/properties/${String(id)}`, {
         method: `DELETE`
       });
       if (response.ok) {
@@ -409,15 +419,16 @@ export const PropertyProvider = ({ children }) => {
 
   const updateListing = async (id, data) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/listings/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/listings/${String(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
       if (response.ok) {
         const result = await response.json();
+        // Preserve tanggalInput from original listing if server doesn't return it
         const mapped = { ...result.data, listingId: result.id, id: result.id, tanggalInput: result.tanggalInput };
-        setListings(prev => prev.map(l => l.listingId === id ? mapped : l));
+        setListings(prev => prev.map(l => String(l.listingId) === String(id) ? { ...l, ...mapped } : l));
       }
     } catch (e) { console.error('Error updating listing', e); }
   };
@@ -426,7 +437,7 @@ export const PropertyProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/listings/${id}`, { method: 'DELETE' });
       if (response.ok) {
-        setListings(prev => prev.filter(l => l.listingId !== id && l.id !== id));
+        setListings(prev => prev.filter(l => String(l.listingId) !== String(id) && String(l.id) !== String(id)));
       }
     } catch (e) { console.error('Error deleting listing', e); }
   };

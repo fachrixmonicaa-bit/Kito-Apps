@@ -69,7 +69,10 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
           tanggalBerakhir: listingToEdit.tanggalBerakhir ? new Date(listingToEdit.tanggalBerakhir).toISOString().split('T')[0] : '',
           photos: listingToEdit.photos || []
         });
-        setLinkedPropertyId(listingToEdit.propertyId);
+        // Only set linkedPropertyId if it's a valid number, not null/undefined/{}
+        const pid = listingToEdit.propertyId;
+        const validPid = pid && typeof pid === 'number' && !isNaN(pid) ? pid : null;
+        setLinkedPropertyId(validPid ? String(validPid) : null);
       } else {
         navigate('/admin/listings/manage');
       }
@@ -149,7 +152,7 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // 1. Separate Physical Property Data vs Listing Data
@@ -183,13 +186,14 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
     let finalPropertyId = linkedPropertyId;
 
     if (isEdit && linkedPropertyId) {
-      updateProperty(linkedPropertyId, propertyData);
+      // Bug fix: await so property update completes before listing update
+      await updateProperty(linkedPropertyId, propertyData);
     } else {
-      // Create new property in Database Properti
-      finalPropertyId = addProperty(propertyData);
+      // Bug fix: await addProperty so we get the real numeric ID, not a Promise
+      finalPropertyId = await addProperty(propertyData);
     }
 
-    // 2. Listing Data
+    // 2. Listing Data — Bug fix: use deskripsiListing to match PropertyDetailPage
     const listingData = {
       propertyId: finalPropertyId,
       tipeListing: formData.tipeListing,
@@ -197,15 +201,15 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
       hargaListing: formData.hargaListing,
       agen: formData.agen,
       tanggalBerakhir: formData.tanggalBerakhir,
-      status: formData.status,
-      deskripsi: formData.deskripsi,
+      status: formData.status || 'Aktif', // Bug fix: default status to 'Aktif'
+      deskripsiListing: formData.deskripsiListing || formData.deskripsi || '',
       photos: formData.photos
     };
 
     if (isEdit) {
-      updateListing(id, listingData);
+      await updateListing(id, listingData);
     } else {
-      addListing(listingData);
+      await addListing(listingData);
     }
     
     navigate('/admin/listings/manage');

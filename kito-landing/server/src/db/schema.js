@@ -72,5 +72,6 @@ export const expense = pgTable('Expense', {
 export const listing = pgTable('Listing', {
   id: serial('id').primaryKey(),
   tanggalInput: timestamp('tanggalInput').defaultNow().notNull(),
+  propertyId: doublePrecision('propertyId'),
   data: jsonb('data')
 });

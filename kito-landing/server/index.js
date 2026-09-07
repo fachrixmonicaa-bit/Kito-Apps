@@ -259,16 +259,33 @@ app.get('/api/listings', async (req, res) => {
 });
 app.post('/api/listings', async (req, res) => {
   try {
-    const result = await db.insert(listing).values({ data: req.body }).returning();
+    const { propertyId, ...rest } = req.body;
+    const result = await db.insert(listing).values({
+      propertyId: propertyId ? Number(propertyId) : null,
+      data: req.body
+    }).returning();
     res.json(result[0]);
-  } catch (error) { res.status(500).json({ error: 'Internal server error' }); }
+  } catch (error) { 
+    console.error('Error creating listing:', error);
+    res.status(500).json({ error: 'Internal server error' }); 
+  }
 });
 app.put('/api/listings/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await db.update(listing).set({ data: req.body }).where(eq(listing.id, Number(id))).returning();
+    const { propertyId, ...rest } = req.body;
+    const result = await db.update(listing)
+      .set({
+        propertyId: propertyId ? Number(propertyId) : null,
+        data: req.body
+      })
+      .where(eq(listing.id, Number(id)))
+      .returning();
     res.json(result[0]);
-  } catch (error) { res.status(500).json({ error: 'Internal server error' }); }
+  } catch (error) { 
+    console.error('Error updating listing:', error);
+    res.status(500).json({ error: 'Internal server error' }); 
+  }
 });
 app.delete('/api/listings/:id', async (req, res) => {
   try {

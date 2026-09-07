@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProperty } from '../../context/PropertyContext';
 import { useAuth } from '../../context/AuthContext';
-import { Plus, Search, Building2, MapPin, Tag, Edit, Trash2, List, Image as ImageIcon } from 'lucide-react';
+import { Plus, Search, Building2, MapPin, Tag, Edit, Trash2, List, Image as ImageIcon, Maximize, Home, BedDouble, Bath, FileText, Activity } from 'lucide-react';
 
 const formatCurrency = (num) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
@@ -85,12 +85,21 @@ const ListingManagement = () => {
             <thead className="bg-slate-900/40 border-b border-white/10 font-semibold text-slate-300">
               <tr>
                 <th className="p-4 w-12 text-center">No</th>
-                <th className="p-4">Listing ID & Judul</th>
-                <th className="p-4">Lokasi & Tipe</th>
-                <th className="p-4">Spesifikasi</th>
-                <th className="p-4">Legal & Kondisi</th>
-                <th className="p-4">Tipe & Agen</th>
+                <th className="p-4">Listing ID</th>
+                <th className="p-4 min-w-[200px]">Judul Listing</th>
+                <th className="p-4">ID Properti</th>
+                <th className="p-4">Tipe Properti</th>
+                <th className="p-4 min-w-[200px]">Alamat</th>
+                <th className="p-4 text-center">LT</th>
+                <th className="p-4 text-center">LB</th>
+                <th className="p-4 text-center">KT</th>
+                <th className="p-4 text-center">KM</th>
+                <th className="p-4">Legalitas</th>
+                <th className="p-4">Kondisi</th>
+                <th className="p-4 text-center">Tipe Listing</th>
+                <th className="p-4">Agen</th>
                 <th className="p-4">Harga Publik</th>
+                <th className="p-4 text-center">Tgl Input</th>
                 <th className="p-4 text-center">Tgl Expired</th>
                 <th className="p-4 text-center">Status</th>
                 <th className="p-4 text-right">Aksi</th>
@@ -106,47 +115,67 @@ const ListingManagement = () => {
                       <td className="p-4 text-center text-white/50">{i + 1}</td>
                       <td className="p-4">
                         <div className="font-mono text-sm font-bold text-white">{listing.listingId}</div>
-                        <div className="text-sm font-semibold text-primary truncate max-w-[200px]" title={listing.judulListing}>{listing.judulListing || 'Tanpa Judul'}</div>
-                        <div className="text-xs text-slate-400 mt-1">{safeDate(listing.tanggalInput)}</div>
-                      </td>
-                      <td className="p-4 align-top max-w-[250px]">
-                        {propertyRef.propertyId ? (
-                          <>
-                            <div className="flex items-center gap-2 mb-1">
-                              <Building2 size={12} className="text-primary" />
-                              <span className="font-semibold text-slate-200">{propertyRef.propertyId} ({propertyRef.jenisProperti})</span>
-                              {listing.photos && listing.photos.length > 0 && (
-                                <div className="flex items-center gap-1 bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded text-[10px] font-bold">
-                                  <ImageIcon size={10} />
-                                  <span>{listing.photos.length}</span>
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex items-start gap-1">
-                              <MapPin size={12} className="text-rose-400 shrink-0 mt-0.5" />
-                              <p className="text-xs text-slate-400 truncate" title={propertyRef.alamat}>{propertyRef.alamat}</p>
-                            </div>
-                          </>
-                        ) : (
-                          <span className="text-slate-500 italic">Properti Dihapus</span>
-                        )}
                       </td>
                       <td className="p-4">
-                        <div className="flex flex-col gap-1 text-xs text-slate-300">
-                          <div>LT: <span className="font-semibold text-white">{propertyRef.luasTanah || '-'}</span> m² | LB: <span className="font-semibold text-white">{propertyRef.luasBangunan || '-'}</span> m²</div>
-                          <div>KT: <span className="font-semibold text-white">{propertyRef.kamarTidur || '-'}</span> | KM: <span className="font-semibold text-white">{propertyRef.kamarMandi || '-'}</span></div>
+                        <div className="text-sm font-semibold text-primary truncate max-w-[200px]" title={listing.judulListing}>{listing.judulListing || '-'}</div>
+                      </td>
+                      <td className="p-4">
+                        <div className="font-semibold text-slate-200">{propertyRef.propertyId ? propertyRef.propertyId : <span className="text-slate-500 italic">Dihapus</span>}</div>
+                      </td>
+                      <td className="p-4">
+                        <div className="text-slate-300 flex items-center gap-1.5">
+                          {propertyRef.jenisProperti && <Building2 size={12} className="text-slate-400" />}
+                          {propertyRef.jenisProperti || '-'}
                         </div>
                       </td>
                       <td className="p-4">
-                        <div className="flex flex-col gap-1 text-xs text-slate-300">
-                          <div>Legal: <span className="font-semibold text-blue-400">{propertyRef.legalitas || '-'}</span></div>
-                          <div>Kondisi: <span className="font-semibold text-emerald-400">{propertyRef.kondisiProperti || '-'}</span></div>
+                        <div className="flex items-start gap-1">
+                          {propertyRef.alamat && <MapPin size={12} className="text-rose-400 shrink-0 mt-0.5" />}
+                          <p className="text-xs text-slate-400 truncate max-w-[200px]" title={propertyRef.alamat}>{propertyRef.alamat || '-'}</p>
+                        </div>
+                      </td>
+                      <td className="p-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-slate-300">
+                          <Maximize size={14} className="text-blue-400" />
+                          <span className="font-semibold text-white">{propertyRef.luasTanah || '-'}</span> m²
+                        </div>
+                      </td>
+                      <td className="p-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-slate-300">
+                          <Home size={14} className="text-indigo-400" />
+                          <span className="font-semibold text-white">{propertyRef.luasBangunan || '-'}</span> m²
+                        </div>
+                      </td>
+                      <td className="p-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-slate-300">
+                          <BedDouble size={14} className="text-rose-400" />
+                          <span className="font-semibold text-white">{propertyRef.kamarTidur || '-'}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-slate-300">
+                          <Bath size={14} className="text-cyan-400" />
+                          <span className="font-semibold text-white">{propertyRef.kamarMandi || '-'}</span>
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className={`inline-block px-2 py-1 text-[10px] uppercase font-bold rounded border mb-1 ${listing.tipeListing === 'Exclusive' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30'}`}>
+                        <div className="flex items-center gap-1.5 text-blue-400">
+                          <FileText size={14} />
+                          <span className="font-semibold">{propertyRef.legalitas || '-'}</span>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-1.5 text-emerald-400">
+                          <Activity size={14} />
+                          <span className="font-semibold">{propertyRef.kondisiProperti || '-'}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-center">
+                        <span className={`inline-block px-2 py-1 text-[10px] uppercase font-bold rounded border ${listing.tipeListing === 'Exclusive' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30'}`}>
                           {listing.tipeListing || 'REGULAR'}
                         </span>
+                      </td>
+                      <td className="p-4">
                         <div className="font-medium text-slate-200 text-xs truncate max-w-[150px]">{listing.agen || '-'}</div>
                       </td>
                       <td className="p-4">
@@ -154,6 +183,9 @@ const ListingManagement = () => {
                           <Tag size={14} className="text-emerald-400" />
                           <span className="font-bold text-white">{formatCurrency(listing.hargaListing)}</span>
                         </div>
+                      </td>
+                      <td className="p-4 text-center">
+                        <div className="text-xs text-slate-400">{safeDate(listing.tanggalInput)}</div>
                       </td>
                       <td className="p-4 text-center">
                         <span className="text-rose-300 font-medium text-xs">{safeDate(listing.tanggalBerakhir)}</span>
@@ -190,7 +222,7 @@ const ListingManagement = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan="10" className="p-12 text-center">
+                  <td colSpan="19" className="p-12 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
                         <List size={24} className="text-slate-500" />

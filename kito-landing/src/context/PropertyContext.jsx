@@ -80,7 +80,7 @@ export const PropertyProvider = ({ children }) => {
           const mapped = data.map(p => {
             let extra = {};
             try { extra = JSON.parse(p.description || '{}'); } catch(e) {}
-            return { ...extra, ...p, propertyId: p.id };
+            return { ...p, ...extra, propertyId: p.id };
           });
           setProperties(mapped);
         }
@@ -316,7 +316,7 @@ export const PropertyProvider = ({ children }) => {
         const newProperty = await response.json();
         let extra = {};
         try { extra = JSON.parse(newProperty.description || '{}'); } catch(e) {}
-        const mapped = { ...extra, ...newProperty, propertyId: newProperty.id };
+        const mapped = { ...newProperty, ...extra, propertyId: newProperty.id };
         setProperties(prev => [mapped, ...prev]);
         return mapped.propertyId;
       }
@@ -347,7 +347,7 @@ export const PropertyProvider = ({ children }) => {
           const newProperty = await response.json();
           let extra = {};
           try { extra = JSON.parse(newProperty.description || '{}'); } catch(e) {}
-          newItems.push({ ...extra, ...newProperty, propertyId: newProperty.id });
+          newItems.push({ ...newProperty, ...extra, propertyId: newProperty.id });
           successCount++;
         }
       } catch (error) {
@@ -379,7 +379,7 @@ export const PropertyProvider = ({ children }) => {
         const updated = await response.json();
         let extra = {};
         try { extra = JSON.parse(updated.description || '{}'); } catch(e) {}
-        const mapped = { ...extra, ...updated, propertyId: updated.id };
+        const mapped = { ...updated, ...extra, propertyId: updated.id };
         setProperties(prev => prev.map(p => String(p.propertyId) === String(id) ? mapped : p));
       }
     } catch (error) {

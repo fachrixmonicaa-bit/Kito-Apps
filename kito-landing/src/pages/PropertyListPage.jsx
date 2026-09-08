@@ -343,7 +343,7 @@ const AdvancedFilter = ({
 };
 
 
-const ListingCard = ({ image, title, priceStr, location, description, specs, exclusive, beds, baths, carport, status, legalitas, rawType, id, views = 142, uploadTime = "2 hari lalu" }) => {
+const ListingCard = ({ image, title, priceStr, location, description, specs, exclusive, beds, baths, carport, tingkatBangunan, status, legalitas, rawType, id, views = 142, uploadTime = "2 hari lalu" }) => {
   const navigate = useNavigate();
   const [isVisibleOnMobile, setIsVisibleOnMobile] = useState(false);
   const cardRef = useRef(null);
@@ -446,7 +446,7 @@ const ListingCard = ({ image, title, priceStr, location, description, specs, exc
           </div>
         </div>
 
-        {(beds || baths || carport || legalitas) && (
+        {(beds || baths || carport || tingkatBangunan || legalitas) && (
           <div className={`absolute bottom-0 left-0 right-0 p-2.5 z-20 transition-all duration-300 transform ${isVisibleOnMobile ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'} lg:group-hover:opacity-100 lg:group-hover:translate-y-0 lg:opacity-0 lg:translate-y-3 pointer-events-auto`}>
             <div className="bg-black/65 hover:bg-black/80 backdrop-blur-md rounded-[10.6px] flex items-center justify-center gap-4 py-2.5 px-3 text-white border border-white/20 shadow-2xl text-center transition-all divide-x divide-white/15">
               {beds && (
@@ -469,15 +469,27 @@ const ListingCard = ({ image, title, priceStr, location, description, specs, exc
                   <span className="font-extrabold text-xs text-white">{baths}</span>
                 </div>
               )}
-              {(carport || true) && (
-                <div className="flex items-center justify-center gap-1.5 pl-4" title={`${carport || 2} Carport`}>
+              {(carport && carport !== '0') && (
+                <div className="flex items-center justify-center gap-1.5 pl-4" title={`${carport} Carport`}>
                   <svg className="w-4 h-4 text-white/90 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                     <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 11 2 11.5 2 12v4c0 .6.4 1 1 1h2" />
                     <circle cx="7" cy="17" r="2" />
                     <path d="M9 17h6" />
                     <circle cx="17" cy="17" r="2" />
                   </svg>
-                  <span className="font-extrabold text-xs text-white">{carport || 2}</span>
+                  <span className="font-extrabold text-xs text-white">{carport}</span>
+                </div>
+              )}
+              {(tingkatBangunan && tingkatBangunan !== '-') && (
+                <div className="flex items-center justify-center gap-1.5 pl-4" title={`Tingkat Bangunan: ${tingkatBangunan}`}>
+                  <svg className="w-4 h-4 text-white/90 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <path d="M3 21h18" />
+                    <path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17" />
+                    <path d="M6 9h12" />
+                    <path d="M6 15h12" />
+                    <path d="M10 21v-3h4v3" />
+                  </svg>
+                  <span className="font-extrabold text-xs text-white">{tingkatBangunan.replace('Lantai', 'Lt').replace(' ', '')}</span>
                 </div>
               )}
               {legalitas && (
@@ -675,6 +687,8 @@ const PropertyListPage = () => {
       ],
       beds: p.kamarTidur || l.kamarTidur,
       baths: p.kamarMandi || l.kamarMandi,
+      carport: p.carport || l.carport,
+      tingkatBangunan: p.tingkatBangunan || l.tingkatBangunan,
       legalitas: p.legalitas || l.legalitas,
       exclusive: l.tipeListing === 'Exclusive',
       // For filtering

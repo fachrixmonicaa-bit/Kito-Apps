@@ -673,9 +673,9 @@ const PropertyListPage = () => {
         { label: 'LT', value: `${p.luasTanah || 0}m²` },
         { label: 'LB', value: `${p.luasBangunan || 0}m²` }
       ],
-      beds: p.kamarTidur,
-      baths: p.kamarMandi,
-      legalitas: p.legalitas,
+      beds: p.kamarTidur || l.kamarTidur,
+      baths: p.kamarMandi || l.kamarMandi,
+      legalitas: p.legalitas || l.legalitas,
       exclusive: l.tipeListing === 'Exclusive',
       // For filtering
       rawLT: parseInt(p.luasTanah) || 0,

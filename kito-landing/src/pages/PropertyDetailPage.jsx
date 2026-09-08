@@ -37,15 +37,15 @@ const PropertyDetailPage = () => {
       ...(prop.kamarMandi ? [{ label: 'Kamar Mandi', value: prop.kamarMandi }] : [])
     ],
     // New fields for comprehensive visualization
-    legalitas: prop.legalitas || '-',
-    tingkatBangunan: prop.tingkatBangunan || '-',
-    kondisiProperti: prop.kondisiProperti || '-',
-    aksesJalan: prop.aksesJalan || '-',
-    posisiObjek: prop.posisiObjek || '-',
-    skorMitigasi: prop.skorMitigasi || '-',
-    skorUtilitas: prop.skorUtilitas || '-',
-    zonaKawasan: prop.zonaKawasan || '-',
-    zonaPerkembangan: prop.zonaPerkembangan || '-'
+    legalitas: prop.legalitas || listing.legalitas || '-',
+    tingkatBangunan: prop.tingkatBangunan || listing.tingkatBangunan || '-',
+    kondisiProperti: prop.kondisiProperti || listing.kondisiProperti || '-',
+    aksesJalan: prop.aksesJalan || listing.aksesJalan || '-',
+    posisiObjek: prop.posisiObjek || listing.posisiObjek || '-',
+    skorMitigasi: prop.skorMitigasi || listing.skorMitigasi || '-',
+    skorUtilitas: prop.skorUtilitas || listing.skorUtilitas || '-',
+    zonaKawasan: prop.zonaKawasan || listing.zonaKawasan || '-',
+    zonaPerkembangan: prop.zonaPerkembangan || listing.zonaPerkembangan || '-'
   } : null;
 
   const [contactName, setContactName] = useState('');

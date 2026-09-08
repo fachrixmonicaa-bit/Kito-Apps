@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProperty } from '../../context/PropertyContext';
 import { useAuth } from '../../context/AuthContext';
-import { Plus, Search, Building2, MapPin, Tag, Edit, Trash2, List, Image as ImageIcon, Maximize, Home, BedDouble, Bath, FileText, Activity } from 'lucide-react';
+import { Plus, Search, Building2, MapPin, Tag, Edit, Trash2, List, Image as ImageIcon, Maximize, Home, BedDouble, Bath, Car, FileText, Activity } from 'lucide-react';
 
 const formatCurrency = (num) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
@@ -94,6 +94,7 @@ const ListingManagement = () => {
                 <th className="p-4 text-center">LB</th>
                 <th className="p-4 text-center">KT</th>
                 <th className="p-4 text-center">KM</th>
+                <th className="p-4 text-center">CP</th>
                 <th className="p-4">Legalitas</th>
                 <th className="p-4">Kondisi</th>
                 <th className="p-4 text-center">Tipe Listing</th>
@@ -149,25 +150,31 @@ const ListingManagement = () => {
                       <td className="p-4 text-center">
                         <div className="flex items-center justify-center gap-1.5 text-slate-300">
                           <BedDouble size={14} className="text-rose-400" />
-                          <span className="font-semibold text-white">{propertyRef.kamarTidur || '-'}</span>
+                          <span className="font-semibold text-white">{propertyRef.kamarTidur || listing.kamarTidur || '-'}</span>
                         </div>
                       </td>
                       <td className="p-4 text-center">
                         <div className="flex items-center justify-center gap-1.5 text-slate-300">
                           <Bath size={14} className="text-cyan-400" />
-                          <span className="font-semibold text-white">{propertyRef.kamarMandi || '-'}</span>
+                          <span className="font-semibold text-white">{propertyRef.kamarMandi || listing.kamarMandi || '-'}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-slate-300">
+                          <Car size={14} className="text-amber-400" />
+                          <span className="font-semibold text-white">{propertyRef.carport || listing.carport || '-'}</span>
                         </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-1.5 text-blue-400">
                           <FileText size={14} />
-                          <span className="font-semibold">{propertyRef.legalitas || '-'}</span>
+                          <span className="font-semibold">{propertyRef.legalitas || listing.legalitas || '-'}</span>
                         </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-1.5 text-emerald-400">
                           <Activity size={14} />
-                          <span className="font-semibold">{propertyRef.kondisiProperti || '-'}</span>
+                          <span className="font-semibold">{propertyRef.kondisiProperti || listing.kondisiProperti || '-'}</span>
                         </div>
                       </td>
                       <td className="p-4 text-center">

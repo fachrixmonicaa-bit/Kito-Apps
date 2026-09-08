@@ -35,6 +35,7 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
     luasBangunan: '',
     kamarTidur: '0',
     kamarMandi: '0',
+    carport: '0',
     hargaJual: '',
     hargaM2: '',
     skorMitigasi: '',
@@ -173,6 +174,7 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
       luasBangunan: formData.luasBangunan,
       kamarTidur: formData.kamarTidur,
       kamarMandi: formData.kamarMandi,
+      carport: formData.carport,
       hargaJual: formData.hargaJual,
       hargaM2: formData.hargaM2,
       skorMitigasi: formData.skorMitigasi,
@@ -203,7 +205,16 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
       tanggalBerakhir: formData.tanggalBerakhir,
       status: formData.status || 'Aktif', // Bug fix: default status to 'Aktif'
       deskripsiListing: formData.deskripsiListing || formData.deskripsi || '',
-      photos: formData.photos
+      photos: formData.photos,
+      
+      // Integrasikan data fisik ke listingData juga agar pasti terbaca di Manage Listing
+      kamarTidur: formData.kamarTidur,
+      kamarMandi: formData.kamarMandi,
+      carport: formData.carport,
+      legalitas: formData.legalitas,
+      kondisiProperti: formData.kondisiProperti,
+      luasTanah: formData.luasTanah,
+      luasBangunan: formData.luasBangunan
     };
 
     if (isEdit) {
@@ -387,6 +398,30 @@ const ListingForm = ({ defaultType = 'Regular' }) => {
                 </select>
                 {!['0','1','2','3','4','5','6'].includes(String(formData.kamarMandi)) && (
                   <input type="number" name="kamarMandi" value={formData.kamarMandi} onChange={handleChange} min="0" className="w-1/2 bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none text-white transition-all" />
+                )}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Carport</label>
+              <div className="flex gap-2">
+                <select 
+                  name="carport" 
+                  value={['0','1','2','3','4'].includes(String(formData.carport)) ? formData.carport : 'Custom'} 
+                  onChange={(e) => {
+                    if(e.target.value !== 'Custom') {
+                      handleChange(e);
+                    } else {
+                      setFormData(prev => ({...prev, carport: ''}));
+                    }
+                  }} 
+                  className={`bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none text-white transition-all ${!['0','1','2','3','4'].includes(String(formData.carport)) ? 'w-1/2' : 'w-full'}`}
+                >
+                  <option value="0">Tidak Ada</option>
+                  {[1, 2, 3, 4].map(i => <option key={`cp-${i}`} value={i}>{i}</option>)}
+                  <option value="Custom">Custom...</option>
+                </select>
+                {!['0','1','2','3','4'].includes(String(formData.carport)) && (
+                  <input type="number" name="carport" value={formData.carport} onChange={handleChange} min="0" className="w-1/2 bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none text-white transition-all" />
                 )}
               </div>
             </div>

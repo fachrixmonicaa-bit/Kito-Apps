@@ -144,3 +144,25 @@ body {
     box-shadow: none !important;
   }
 }
+
+.card-spotlight {
+  position: relative;
+}
+.card-spotlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, -200px) var(--mouse-y, -200px),
+    rgba(234, 206, 64, 0.16),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 20;
+}
+.card-spotlight:hover::before {
+  opacity: 1;
+}

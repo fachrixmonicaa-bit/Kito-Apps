@@ -43,17 +43,27 @@ const Navbar = () => {
               <Link to="/" className={`font-medium hover:text-primary transition-colors ${textClasses}`}>
                 Home
               </Link>
-              <Link to="/properties" className={`font-medium hover:text-primary transition-colors ${textClasses}`}>
-                Cari Properti
-              </Link>
-              <Link to="/sell" className={`font-medium hover:text-primary transition-colors ${textClasses}`}>
-                Jual Properti
-              </Link>
               <Link to="/join" className={`font-medium hover:text-primary transition-colors ${textClasses}`}>
                 Join Us
               </Link>
               <Link to="/news" className={`font-medium hover:text-primary transition-colors ${textClasses}`}>
                 Kito News
+              </Link>
+            </div>
+
+            {/* Toggle Cari / Jual Properti */}
+            <div className={`hidden lg:flex items-center p-1 rounded-full border ${isLandingPage && !isScrolled ? 'border-white/30 bg-white/10 backdrop-blur-md' : 'border-slate-200 bg-slate-50'} transition-all`}>
+              <Link 
+                to="/properties" 
+                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${location.pathname === '/properties' ? 'bg-[#EACE40] text-slate-900 shadow-sm' : `${textClasses} opacity-80 hover:opacity-100`}`}
+              >
+                Cari Properti
+              </Link>
+              <Link 
+                to="/sell" 
+                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${location.pathname === '/sell' ? 'bg-[#EACE40] text-slate-900 shadow-sm' : `${textClasses} opacity-80 hover:opacity-100`}`}
+              >
+                Jual Properti
               </Link>
             </div>
 

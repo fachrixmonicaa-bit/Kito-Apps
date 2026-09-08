@@ -5,6 +5,15 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useProperties } from '../context/PropertyContext';
 
+const formatCompactCurrency = (num) => {
+  if (!num) return 'Rp 0';
+  const value = Math.abs(num);
+  const sign = num < 0 ? '-' : '';
+  if (value >= 1000000000) return sign + 'Rp ' + (value / 1000000000).toFixed(1).replace('.0', '') + ' M';
+  if (value >= 1000000) return sign + 'Rp ' + (value / 1000000).toFixed(1).replace('.0', '') + ' JT';
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+};
+
 const PropertyDetailPage = () => {
   const { id } = useParams();
   const { properties, listings, addLead } = useProperties();
@@ -17,7 +26,7 @@ const PropertyDetailPage = () => {
     title: listing.judulListing || `${prop.jenisProperti} Siap Huni`,
     type: prop.jenisProperti,
     location: `${prop.kelurahan || '-'}, ${prop.kecamatan || '-'}`,
-    priceStr: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(listing.hargaListing || prop.hargaJual || 0),
+    priceStr: formatCompactCurrency(listing.hargaListing || prop.hargaJual || 0),
     image: (listing.photos && listing.photos.length > 0) ? listing.photos[0] : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800',
     exclusive: listing.tipeListing === 'Exclusive',
     description: listing.deskripsiListing || prop.catatanTambahan || 'Silakan hubungi agen kami untuk informasi lebih detail mengenai properti ini.',
